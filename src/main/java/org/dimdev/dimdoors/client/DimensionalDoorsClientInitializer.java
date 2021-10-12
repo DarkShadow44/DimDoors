@@ -3,6 +3,7 @@ package org.dimdev.dimdoors.client;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import org.dimdev.dimdoors.block.ModBlocks;
+import org.dimdev.dimdoors.block.entity.FoldingRiftBlockEntity;
 import org.dimdev.dimdoors.block.entity.ModBlockEntityTypes;
 import org.dimdev.dimdoors.client.DetachedRiftBlockEntityRenderer;
 import org.dimdev.dimdoors.client.DimensionalDoorModelVariantProvider;
@@ -33,6 +34,7 @@ public class DimensionalDoorsClientInitializer implements ClientModInitializer {
 //        ModBlockEntityTypes.initClient();
 		BlockEntityRendererRegistry.INSTANCE.register(ModBlockEntityTypes.ENTRANCE_RIFT, ctx -> new EntranceRiftBlockEntityRenderer());
 		BlockEntityRendererRegistry.INSTANCE.register(ModBlockEntityTypes.DETACHED_RIFT, ctx -> new DetachedRiftBlockEntityRenderer());
+		BlockEntityRendererRegistry.INSTANCE.register(ModBlockEntityTypes.FOLDING_RIFT, ctx -> new FoldingRiftBlockEntityRenderer());
         ModBlocks.initClient();
 		ModEntityModelLayers.initClient();
 		ModParticleTypes.initClient();

@@ -6,8 +6,10 @@ import org.dimdev.dimdoors.block.ModBlocks;
 import org.dimdev.dimdoors.block.door.data.DoorData;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -26,6 +28,11 @@ public class ModBlockEntityTypes {
 			"dimdoors:entrance_rift",
 			EntranceRiftBlockEntity::new,
 			ArrayUtils.add(DoorData.DOORS.toArray(new Block[0]), ModBlocks.DIMENSIONAL_PORTAL));
+
+	public static final BlockEntityType<FoldingRiftBlockEntity> FOLDING_RIFT = register(
+			"dimdoors:folding_rift",
+			FoldingRiftBlockEntity::new,
+			ModBlocks.FOLDING_RIFT);
 
 
 	private static <E extends BlockEntity> BlockEntityType<E> register(String id, FabricBlockEntityTypeBuilder.Factory<E> factory, Block... blocks) {

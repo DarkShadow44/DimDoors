@@ -3,11 +3,15 @@ package org.dimdev.dimdoors.block;
 import java.util.Random;
 
 import net.minecraft.block.*;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import org.dimdev.dimdoors.block.entity.DetachedRiftBlockEntity;
 import org.dimdev.dimdoors.block.entity.ModBlockEntityTypes;
+import org.dimdev.dimdoors.entity.FoldingEntity;
+import org.dimdev.dimdoors.item.ModItems;
 import org.dimdev.dimdoors.particle.client.RiftParticleEffect;
 import org.dimdev.dimdoors.world.ModDimensions;
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +19,11 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -39,6 +47,18 @@ public class DetachedRiftBlock extends WaterLoggableBlockWithEntity implements R
 	@Override
 	public DetachedRiftBlockEntity getRift(World world, BlockPos pos, BlockState state) {
 		return (DetachedRiftBlockEntity) world.getBlockEntity(pos);
+	}
+
+	@Override
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+		if(player.getEquippedStack(EquipmentSlot.HEAD).getItem().equals(ModItems.MASK_OF_FOLDING)) {
+			FoldingEntity entity = FoldingEntity.create(world, player);
+			entity.setPosition(new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
+
+			world.spawnEntity(entity);
+		}
+
+		return super.onUse(state, world, pos, player, hand, hit);
 	}
 
 	@Override

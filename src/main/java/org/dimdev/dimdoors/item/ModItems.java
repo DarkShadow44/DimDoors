@@ -247,6 +247,9 @@ public final class ModItems {
 	@RegistryEntry("mask_shard")
 	public static final Item MASK_SHARD = create(new Item(new Item.Settings().group(DIMENSIONAL_DOORS)));
 
+	@RegistryEntry("mask_of_folding")
+	public static final Item MASK_OF_FOLDING = create(new ArmorItem(ModArmorMaterials.WORLD_THREAD, EquipmentSlot.HEAD, new Item.Settings().group(DIMENSIONAL_DOORS)));
+
 	private static Item create(Block block) {
 		return create(new BlockItem(block, (new Item.Settings()).group(DIMENSIONAL_DOORS)));
 	}

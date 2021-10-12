@@ -135,7 +135,8 @@ dependencies {
 	includeCompile("io.github.onyxstudios.Cardinal-Components-API", "cardinal-components-util", "3.0.0-nightly.1.17-pre2")
 	includeCompile("io.github.onyxstudios.Cardinal-Components-API", "cardinal-components-world", "3.0.0-nightly.1.17-pre2")
 	includeCompile("io.github.onyxstudios.Cardinal-Components-API", "cardinal-components-chunk", "3.0.0-nightly.1.17-pre2")
-
+	implementation 'de.javagl:obj:0.3.0'
+	include 'de.javagl:obj:0.3.0'
 	modCompileOnly("com.terraformersmc:modmenu:2.0.0-beta.7") {
 		exclude module: "fabric-api"
 	}

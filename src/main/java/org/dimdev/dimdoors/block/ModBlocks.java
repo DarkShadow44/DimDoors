@@ -50,6 +50,8 @@ public final class ModBlocks {
 	@RegistryEntry("detached_rift")
 	public static final Block DETACHED_RIFT = register(new DetachedRiftBlock(FabricBlockSettings.of(Material.AIR).strength(-1.0F, 3600000.0F).noCollision().nonOpaque()));
 
+	@RegistryEntry("folding_rift")
+	public static final Block FOLDING_RIFT = register(new FoldingRiftBlock(FabricBlockSettings.of(Material.AIR).strength(-1.0F, 3600000.0F).noCollision().nonOpaque()));
 
 	@RegistryEntry("white_fabric")
 	public static final Block WHITE_FABRIC = registerFabric(DyeColor.WHITE);

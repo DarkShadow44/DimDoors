@@ -7,8 +7,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.*;
+
+import org.dimdev.dimdoors.api.client.DimensionalPortalRenderer;
 import org.dimdev.dimdoors.api.client.RenderLayerFactory;
 
+import net.minecraft.client.render.block.entity.EndPortalBlockEntityRenderer;
 import net.minecraft.util.Identifier;
 
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_DST_COLOR;
@@ -64,6 +67,21 @@ public class MyRenderLayer extends RenderLayer {
 							false)
 					)
 					.shader(RenderPhase.POSITION_COLOR_TEXTURE_SHADER)
+					.build(false)
+	);
+
+    public static RenderLayer FOLDING = RenderLayerFactory.create("folding",
+			VertexFormats.POSITION_COLOR,
+			VertexFormat.DrawMode.TRIANGLES,
+			256,
+			false,
+			false,
+			MultiPhaseParameters.builder()
+					.cull(RenderPhase.DISABLE_CULLING)
+					.lightmap(RenderPhase.DISABLE_LIGHTMAP)
+					.texture(NO_TEXTURE)
+					.transparency(NO_TRANSPARENCY)
+					.shader(RenderPhase.COLOR_SHADER)
 					.build(false)
 	);
 

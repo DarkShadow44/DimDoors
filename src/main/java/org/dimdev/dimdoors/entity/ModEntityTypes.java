@@ -1,8 +1,11 @@
 package org.dimdev.dimdoors.entity;
 
+import org.dimdev.dimdoors.client.FoldingRenderer;
 import org.dimdev.dimdoors.client.MaskRenderer;
 import org.dimdev.dimdoors.client.MonolithRenderer;
 
+import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -28,6 +31,12 @@ public class ModEntityTypes {
             0.9375f, 0.9375f, true
     );
 
+    public static final EntityType<FoldingEntity> FOLDING = register(
+            "dimdoors:folding",
+            FoldingEntity::new,
+            0.9375f, 0.9375f
+    );
+
     public static void init() {
         FabricDefaultAttributeRegistry.register(MONOLITH, MonolithEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(MASK, MonolithEntity.createMobAttributes());
@@ -37,6 +46,7 @@ public class ModEntityTypes {
     public static void initClient() {
         EntityRendererRegistry.INSTANCE.register(MONOLITH, MonolithRenderer::new);
         EntityRendererRegistry.INSTANCE.register(MASK, MaskRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(FOLDING, FoldingRenderer::new);
     }
 
     private static <E extends Entity> EntityType<E> register(String id, EntityType.EntityFactory<E> factory, float width, float height, boolean fixed) {
