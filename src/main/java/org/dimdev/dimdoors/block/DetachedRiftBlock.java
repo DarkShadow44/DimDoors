@@ -9,6 +9,8 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import org.dimdev.dimdoors.block.entity.DetachedRiftBlockEntity;
+import org.dimdev.dimdoors.block.entity.EntranceRiftBlockEntity;
+import org.dimdev.dimdoors.block.entity.FoldingRiftBlockEntity;
 import org.dimdev.dimdoors.block.entity.ModBlockEntityTypes;
 import org.dimdev.dimdoors.entity.FoldingEntity;
 import org.dimdev.dimdoors.item.ModItems;
@@ -52,10 +54,12 @@ public class DetachedRiftBlock extends WaterLoggableBlockWithEntity implements R
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		if(player.getEquippedStack(EquipmentSlot.HEAD).getItem().equals(ModItems.MASK_OF_FOLDING)) {
-			FoldingEntity entity = FoldingEntity.create(world, player);
-			entity.setPosition(new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
+			DetachedRiftBlockEntity rift = this.getRift(world, pos, state);
 
-			world.spawnEntity(entity);
+			world.setBlockState(pos, ModBlocks.FOLDING_RIFT.getDefaultState());
+			((FoldingRiftBlockEntity) world.getBlockEntity(pos)).setData(rift.getData());
+
+			return ActionResult.CONSUME;
 		}
 
 		return super.onUse(state, world, pos, player, hand, hit);
