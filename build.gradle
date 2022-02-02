@@ -62,7 +62,7 @@ repositories {
 	maven { url "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/" }
 }
 
-def includeCompile(group, artifact, version) {
+def includeCompile(String group, String artifact,String version) {
 	project.dependencies {
 		modCompileOnly("$group:$artifact:$version") {
 			exclude module: "fabric-api"
@@ -103,10 +103,10 @@ loom {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:1.18.1"
-	mappings "net.fabricmc:yarn:1.18.1+build.18:v2"
-	modImplementation "net.fabricmc:fabric-loader:0.12.12"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.46.0+1.18"
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.minecraft_version}+${project.yarn_build}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 	includeCompile("com.flowpowered", "flow-math", "1.0.3")
 	includeCompile("org.jgrapht", "jgrapht-core", "1.1.0")
 	includeCompile("com.github.DimensionalDevelopment", "poly2tri.java", "0.1.1")
@@ -197,10 +197,10 @@ curseforge {
 		id = "284876"
 		changelog = file("changelog.txt").text
 		releaseType = "beta"
-		addGameVersion "1.18.1"
+		addGameVersion "${project.minecraft_version}"
 		addGameVersion "Fabric"
 		mainArtifact(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar")) {
-			displayName = "[1.18.1] Dimensional Doors ${version}"
+			displayName = "[${project.minecraft_version}] Dimensional Doors ${version}"
 		}
 		afterEvaluate {
 			uploadTask.dependsOn("remapJar")
