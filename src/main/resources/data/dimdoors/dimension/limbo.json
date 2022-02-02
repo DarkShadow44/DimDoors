@@ -30,20 +30,20 @@
         "simplex_surface_noise": true,
         "random_density_offset": true,
         "island_noise_override": false,
-        "amplified": true,
+        "amplified": false,
         "size_horizontal": 1,
-        "size_vertical": 4,
+        "size_vertical": 3,
         "height": 176,
         "sampling": {
-          "xz_scale": 1,
-          "y_scale": 3,
+          "xz_scale": 2,
+          "y_scale": 2,
           "xz_factor": 60,
-          "y_factor": 240
+          "y_factor": 80
         },
         "terrain_shaper": {
           "offset": -0.26875,
           "factor": 1,
-          "jaggedness": 1.5
+          "jaggedness": 1.1
         },
         "bottom_slide": {
           "target": -30,
