@@ -1,0 +1,11 @@
+{
+  "predicate": {
+    "block": "minecraft:stone_bricks",
+    "type": "dimdoors:simple"
+  },
+  "processor": {
+    "entropy": 1,
+    "block": "minecraft:cracked_stone_bricks",
+    "type": "dimdoors:simple"
+  }
+}

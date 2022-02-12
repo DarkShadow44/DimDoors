@@ -1,0 +1,11 @@
+{
+  "predicate": {
+    "block": "minecraft:lapis_ore",
+    "type": "dimdoors:simple"
+  },
+  "processor": {
+    "entropy": 1,
+    "block": "minecraft:stone",
+    "type": "dimdoors:simple"
+  }
+}
