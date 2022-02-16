@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 import com.mojang.serialization.Lifecycle;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.api.rift.target.Target;
 import org.dimdev.dimdoors.api.util.Location;
 import org.dimdev.dimdoors.api.util.RGBA;
@@ -120,7 +120,7 @@ public abstract class VirtualTarget implements Target {
 		}
 
 		static void register() {
-			DimensionalDoorsInitializer.apiSubscribers.forEach(d -> d.registerVirtualTargetTypes(REGISTRY));
+			DimensionalDoors.apiSubscribers.forEach(d -> d.registerVirtualTargetTypes(REGISTRY));
 		}
 
 		@SuppressWarnings("unchecked")

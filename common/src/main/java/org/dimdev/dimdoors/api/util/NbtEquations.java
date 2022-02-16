@@ -1,14 +1,13 @@
 package org.dimdev.dimdoors.api.util;
 
-import java.util.Map;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.dimdev.dimdoors.api.util.math.Equation;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.dimdev.dimdoors.api.util.math.Equation;
+
+import java.util.Map;
 
 public class NbtEquations {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -16,7 +15,7 @@ public class NbtEquations {
 	public static NbtCompound solveNbtCompoundEquations(NbtCompound nbt, Map<String, Double> variableMap) {
 		NbtCompound solved = new NbtCompound();
 		for (String key : nbt.getKeys()) {
-			if (nbt.getType(key) == NbtType.STRING && key.startsWith("equation_")) {
+			if (nbt.getType(key) == NbtElement.STRING_TYPE && key.startsWith("equation_")) {
 				try {
 					double solution = Equation.parse(nbt.getString(key)).apply(variableMap);
 					key = key.substring(9);
@@ -35,9 +34,9 @@ public class NbtEquations {
 				} catch (Equation.EquationParseException e) {
 					LOGGER.error(e);
 				}
-			} else if (nbt.getType(key) == NbtType.COMPOUND) {
+			} else if (nbt.getType(key) == NbtElement.COMPOUND_TYPE) {
 				solved.put(key, solveNbtCompoundEquations(nbt.getCompound(key), variableMap));
-			} else if (nbt.getType(key) == NbtType.LIST) {
+			} else if (nbt.getType(key) == NbtElement.LIST_TYPE) {
 				solved.put(key, solveNbtListEquations((NbtList) nbt.get(key), variableMap));
 			} else {
 				solved.put(key, nbt.get(key));
@@ -49,9 +48,9 @@ public class NbtEquations {
 	public static NbtList solveNbtListEquations(NbtList nbtList, Map<String, Double> variableMap) {
 		NbtList solved = new NbtList();
 		for (NbtElement nbt : nbtList) {
-			if (nbt.getType() == NbtType.LIST) {
+			if (nbt.getType() == NbtElement.LIST_TYPE) {
 				solved.add(solveNbtListEquations((NbtList) nbt, variableMap));
-			} else if (nbt.getType() == NbtType.COMPOUND) {
+			} else if (nbt.getType() == NbtElement.COMPOUND_TYPE) {
 				solved.add(solveNbtCompoundEquations((NbtCompound) nbt, variableMap));
 			} else {
 				solved.add(nbt);

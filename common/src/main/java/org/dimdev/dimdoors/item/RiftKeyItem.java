@@ -1,21 +1,5 @@
 package org.dimdev.dimdoors.item;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.dimdev.dimdoors.block.RiftProvider;
-import org.dimdev.dimdoors.block.entity.EntranceRiftBlockEntity;
-import org.dimdev.dimdoors.block.entity.RiftBlockEntity;
-import org.dimdev.dimdoors.mixin.accessor.ListTagAccessor;
-import org.dimdev.dimdoors.network.ServerPacketHandler;
-import org.dimdev.dimdoors.rift.registry.Rift;
-import org.dimdev.dimdoors.api.util.EntityUtils;
-import org.dimdev.dimdoors.api.util.Location;
-import org.dimdev.dimdoors.world.level.registry.DimensionalRegistry;
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtIntArray;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
@@ -32,8 +17,21 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.dynamic.DynamicSerializableUuid;
 import net.minecraft.world.World;
+import org.dimdev.dimdoors.api.util.EntityUtils;
+import org.dimdev.dimdoors.api.util.Location;
+import org.dimdev.dimdoors.block.RiftProvider;
+import org.dimdev.dimdoors.block.entity.EntranceRiftBlockEntity;
+import org.dimdev.dimdoors.block.entity.RiftBlockEntity;
+import org.dimdev.dimdoors.mixin.accessor.ListTagAccessor;
+import org.dimdev.dimdoors.network.ServerPacketHandler;
+import org.dimdev.dimdoors.rift.registry.Rift;
+import org.dimdev.dimdoors.world.level.registry.DimensionalRegistry;
+import org.jetbrains.annotations.Nullable;
 
-import net.fabricmc.fabric.api.util.NbtType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class RiftKeyItem extends Item {
 	public RiftKeyItem(Settings settings) {
@@ -75,7 +73,7 @@ public class RiftKeyItem extends Item {
 	@Override
 	public ItemStack getDefaultStack() {
 		ItemStack stack = super.getDefaultStack();
-		stack.setSubNbt("Ids", ListTagAccessor.createListTag(new ArrayList<>(), (byte) NbtType.INT_ARRAY));
+		stack.setSubNbt("Ids", ListTagAccessor.createListTag(new ArrayList<>(), (byte) NbtElement.INT_ARRAY_TYPE));
 		return stack;
 	}
 
@@ -117,26 +115,26 @@ public class RiftKeyItem extends Item {
 
 	public static boolean tryRemove(ItemStack stack, UUID id) {
 		NbtIntArray arrayTag = new NbtIntArray(DynamicSerializableUuid.toIntArray(id));
-		return stack.getNbt().getList("Ids", NbtType.INT_ARRAY).remove(arrayTag);
+		return stack.getNbt().getList("Ids", NbtElement.BYTE_ARRAY_TYPE).remove(arrayTag);
 	}
 
 	public static void add(ItemStack stack, UUID id) {
 		if (!has(stack, id)) {
-			stack.getOrCreateNbt().getList("Ids", NbtType.INT_ARRAY).add(new NbtIntArray(DynamicSerializableUuid.toIntArray(id)));
+			stack.getOrCreateNbt().getList("Ids", NbtElement.BYTE_ARRAY_TYPE).add(new NbtIntArray(DynamicSerializableUuid.toIntArray(id)));
 		}
 	}
 
 	public static boolean has(ItemStack stack, UUID id) {
-		return stack.getOrCreateNbt().getList("Ids", NbtType.INT_ARRAY).contains(new NbtIntArray(DynamicSerializableUuid.toIntArray(id)));
+		return stack.getOrCreateNbt().getList("Ids", NbtElement.BYTE_ARRAY_TYPE).contains(new NbtIntArray(DynamicSerializableUuid.toIntArray(id)));
 	}
 
 	public static boolean isEmpty(ItemStack stack) {
-		return stack.getOrCreateNbt().getList("Ids", NbtType.INT_ARRAY).isEmpty();
+		return stack.getOrCreateNbt().getList("Ids", NbtElement.BYTE_ARRAY_TYPE).isEmpty();
 	}
 
 	public static List<UUID> getIds(ItemStack stack) {
 		return stack.getOrCreateNbt()
-				.getList("Ids", NbtType.INT_ARRAY)
+				.getList("Ids", NbtElement.BYTE_ARRAY_TYPE)
 				.stream()
 				.map(NbtIntArray.class::cast)
 				.map(NbtIntArray::getIntArray)

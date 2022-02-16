@@ -1,13 +1,9 @@
 package org.dimdev.dimdoors.pockets.virtual.reference;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerTask;
@@ -16,7 +12,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
+import org.dimdev.dimdoors.api.util.math.Equation;
+import org.dimdev.dimdoors.api.util.math.Equation.EquationParseException;
+import org.dimdev.dimdoors.pockets.PocketGenerationContext;
 import org.dimdev.dimdoors.pockets.generator.LazyPocketGenerator;
 import org.dimdev.dimdoors.pockets.generator.PocketGenerator;
 import org.dimdev.dimdoors.pockets.modifier.LazyCompatibleModifier;
@@ -24,11 +23,15 @@ import org.dimdev.dimdoors.pockets.modifier.LazyModifier;
 import org.dimdev.dimdoors.pockets.modifier.Modifier;
 import org.dimdev.dimdoors.pockets.modifier.RiftManager;
 import org.dimdev.dimdoors.pockets.virtual.ImplementedVirtualPocket;
-import org.dimdev.dimdoors.pockets.PocketGenerationContext;
-import org.dimdev.dimdoors.api.util.math.Equation;
-import org.dimdev.dimdoors.api.util.math.Equation.EquationParseException;
 import org.dimdev.dimdoors.world.pocket.type.LazyGenerationPocket;
 import org.dimdev.dimdoors.world.pocket.type.Pocket;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public abstract class PocketGeneratorReference implements ImplementedVirtualPocket {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -46,11 +49,11 @@ public abstract class PocketGeneratorReference implements ImplementedVirtualPock
 			LOGGER.debug("Defaulting to default weight equation for {}", this);
 			LOGGER.debug("Exception Stacktrace", e);
 			try {
-				this.weightEquation = Equation.parse(DimensionalDoorsInitializer.getConfig().getPocketsConfig().defaultWeightEquation);
+				this.weightEquation = Equation.parse(DimensionalDoors.getConfig().getPocketsConfig().defaultWeightEquation);
 			} catch (EquationParseException equationParseException) {
 				LOGGER.debug("Defaulting to default weight equation for {}", this);
 				LOGGER.debug("Exception Stacktrace", e);
-				this.weightEquation = stringDoubleMap -> DimensionalDoorsInitializer.getConfig().getPocketsConfig().fallbackWeight;
+				this.weightEquation = stringDoubleMap -> DimensionalDoors.getConfig().getPocketsConfig().fallbackWeight;
 			}
 		}
 	}
@@ -71,8 +74,8 @@ public abstract class PocketGeneratorReference implements ImplementedVirtualPock
 			}
 		}
 
-		if (nbt.contains("addons", NbtType.LIST)) {
-			NbtList addonsNbt = nbt.getList("addons", 10);
+		if (nbt.contains("addons", NbtElement.LIST_TYPE)) {
+			NbtList addonsNbt = nbt.getList("addons", NbtElement.COMPOUND_TYPE);
 			for (int i = 0; i < addonsNbt.size(); i++) {
 				addons.add(addonsNbt.getCompound(i));
 			}
@@ -166,10 +169,10 @@ public abstract class PocketGeneratorReference implements ImplementedVirtualPock
 				Chunk chunk = LazyPocketGenerator.generationQueue.remove();
 
 				LazyCompatibleModifier.runQueuedModifications(chunk);
-				MinecraftServer server = DimensionalDoorsInitializer.getServer();
-				DimensionalDoorsInitializer.getServer().send(new ServerTask(server.getTicks(), () -> (lazyPocket).chunkLoaded(chunk)));
+				MinecraftServer server = DimensionalDoors.getServer();
+				DimensionalDoors.getServer().send(new ServerTask(server.getTicks(), () -> (lazyPocket).chunkLoaded(chunk)));
 			}
-			LazyCompatibleModifier.runLeftoverModifications(DimensionalDoorsInitializer.getWorld(lazyPocket.getWorld()));
+			LazyCompatibleModifier.runLeftoverModifications(DimensionalDoors.getWorld(lazyPocket.getWorld()));
 		} else {
 			LazyPocketGenerator.currentlyGenerating = false;
 			LazyPocketGenerator.generationQueue.clear();

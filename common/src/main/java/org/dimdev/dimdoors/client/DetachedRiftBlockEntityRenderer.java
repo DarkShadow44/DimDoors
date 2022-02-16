@@ -3,7 +3,7 @@ package org.dimdev.dimdoors.client;
 import java.util.Objects;
 
 import com.flowpowered.math.TrigMath;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.block.entity.DetachedRiftBlockEntity;
 import org.dimdev.dimdoors.block.entity.RiftBlockEntity;
 import org.dimdev.dimdoors.client.tesseract.Tesseract;
@@ -28,7 +28,7 @@ public class DetachedRiftBlockEntityRenderer implements BlockEntityRenderer<Deta
 
     @Override
     public void render(DetachedRiftBlockEntity rift, float tickDelta, MatrixStack matrices, VertexConsumerProvider vcs, int breakProgress, int alpha) {
-    	if (DimensionalDoorsInitializer.getConfig().getGraphicsConfig().showRiftCore) {
+    	if (DimensionalDoors.getConfig().getGraphicsConfig().showRiftCore) {
             this.renderTesseract(vcs.getBuffer(MyRenderLayer.TESSERACT), rift, matrices, tickDelta);
         } else {
             long timeLeft = RiftBlockEntity.showRiftCoreUntil - System.currentTimeMillis();
@@ -43,7 +43,7 @@ public class DetachedRiftBlockEntityRenderer implements BlockEntityRenderer<Deta
     private void renderCrack(VertexConsumer vc, MatrixStack matrices, DetachedRiftBlockEntity rift) {
         matrices.push();
         matrices.translate(0.5, 0.5, 0.5);
-        RiftCrackRenderer.drawCrack(matrices.peek().getPositionMatrix(), vc, 0, CURVE, DimensionalDoorsInitializer.getConfig().getGraphicsConfig().riftSize * rift.size / 150, 0);//0xF1234568L * rift.hashCode());
+        RiftCrackRenderer.drawCrack(matrices.peek().getPositionMatrix(), vc, 0, CURVE, DimensionalDoors.getConfig().getGraphicsConfig().riftSize * rift.size / 150, 0);//0xF1234568L * rift.hashCode());
         matrices.pop();
     }
 

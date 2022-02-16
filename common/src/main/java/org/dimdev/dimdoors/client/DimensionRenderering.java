@@ -27,6 +27,8 @@ public class DimensionRenderering {
     private static final Identifier SUN_RENDER_PATH = new Identifier("dimdoors:textures/other/limbo_sun.png");
 
     public static void initClient() {
+		//TODO: Outright make equivlent forge api
+
         DimensionRenderingRegistry.CloudRenderer noCloudRenderer = context -> {
         };
         DimensionRenderingRegistry.registerCloudRenderer(ModDimensions.LIMBO, noCloudRenderer);

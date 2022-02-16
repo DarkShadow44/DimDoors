@@ -23,6 +23,8 @@ import java.util.function.Consumer;
 @Mixin(World.class)
 public abstract class WorldMixin {
 
+	//TODO: Figure out issue here.
+
 	/*
 	I thought about redirecting the entire break method to be handled by the block itself,
 	but I am not quite sure what that would mean for compatibility with other mixins,

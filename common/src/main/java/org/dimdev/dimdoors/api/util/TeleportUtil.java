@@ -6,7 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.util.math.*;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -79,11 +79,11 @@ public final class TeleportUtil {
 	}
 
 	public static ServerPlayerEntity teleport(ServerPlayerEntity player, Location location) {
-		return teleport(player, DimensionalDoorsInitializer.getWorld(location.world), location.pos, 0);
+		return teleport(player, DimensionalDoors.getWorld(location.world), location.pos, 0);
 	}
 
 	public static ServerPlayerEntity teleport(ServerPlayerEntity player, RotatedLocation location) {
-		return teleport(player, DimensionalDoorsInitializer.getWorld(location.world), location.pos, (int) location.yaw);
+		return teleport(player, DimensionalDoors.getWorld(location.world), location.pos, (int) location.yaw);
 	}
 	public static  <E extends Entity> E teleportRandom(E entity, World world, double y) {
 		double scale = ThreadLocalRandom.current().nextGaussian() * ThreadLocalRandom.current().nextInt(90);

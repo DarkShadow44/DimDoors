@@ -1,15 +1,15 @@
 package org.dimdev.dimdoors.pockets.virtual.reference;
 
-import net.fabricmc.fabric.api.util.NbtType;
+import com.google.common.base.MoreObjects;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
-import com.google.common.base.MoreObjects;
+import org.dimdev.dimdoors.api.util.WeightedList;
+import org.dimdev.dimdoors.pockets.PocketGenerationContext;
 import org.dimdev.dimdoors.pockets.PocketLoader;
 import org.dimdev.dimdoors.pockets.generator.PocketGenerator;
 import org.dimdev.dimdoors.pockets.virtual.ImplementedVirtualPocket;
-import org.dimdev.dimdoors.pockets.PocketGenerationContext;
-import org.dimdev.dimdoors.api.util.WeightedList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,14 +28,14 @@ public class TagReference extends PocketGeneratorReference{
 		super.fromNbt(nbt);
 
 		if (nbt.contains("required")) {
-			NbtList listNbt = nbt.getList("required", NbtType.STRING);
+			NbtList listNbt = nbt.getList("required", NbtElement.STRING_TYPE);
 			for (int i = 0; i < listNbt.size(); i++) {
 				required.add(listNbt.getString(i));
 			}
 		}
 
 		if (nbt.contains("blackList")) {
-			NbtList listNbt = nbt.getList("blackList", NbtType.STRING);
+			NbtList listNbt = nbt.getList("blackList", NbtElement.STRING_TYPE);
 			for (int i = 0; i < listNbt.size(); i++) {
 				blackList.add(listNbt.getString(i));
 			}

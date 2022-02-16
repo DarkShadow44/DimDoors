@@ -1,38 +1,38 @@
 package org.dimdev.dimdoors.util.schematic;
 
-import java.util.*;
-
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.Maps;
-import net.minecraft.block.*;
-import net.minecraft.server.world.ServerChunkManager;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.*;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.dimdev.dimdoors.block.entity.RiftBlockEntity;
-import org.dimdev.dimdoors.api.util.BlockBoxUtil;
-import org.dimdev.dimdoors.api.util.BlockPlacementType;
-import org.jetbrains.annotations.Nullable;
-
+import net.minecraft.block.BlockEntityProvider;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.server.world.ServerChunkManager;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.*;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.ModifiableWorld;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkSection;
+import org.dimdev.dimdoors.api.util.BlockBoxUtil;
+import org.dimdev.dimdoors.api.util.BlockPlacementType;
+import org.dimdev.dimdoors.block.entity.RiftBlockEntity;
+import org.jetbrains.annotations.Nullable;
 
-import net.fabricmc.fabric.api.util.NbtType;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 public class RelativeBlockSample implements BlockView, ModifiableWorld {
 	public final Schematic schematic;
@@ -79,7 +79,7 @@ public class RelativeBlockSample implements BlockView, ModifiableWorld {
 
 		this.entityContainer = HashBiMap.create();
 		for (NbtCompound entityNbt : schematic.getEntities()) {
-			NbtList doubles = entityNbt.getList("Pos", NbtType.DOUBLE);
+			NbtList doubles = entityNbt.getList("Pos", NbtCompound.DOUBLE_TYPE);
 			this.entityContainer.put(entityNbt, new Vec3d(doubles.getDouble(0), doubles.getDouble(1), doubles.getDouble(2)));
 		}
 	}
@@ -129,7 +129,7 @@ public class RelativeBlockSample implements BlockView, ModifiableWorld {
 		}
 		for (Map.Entry<NbtCompound, Vec3d> entry : this.entityContainer.entrySet()) {
 			NbtCompound nbt = entry.getKey();
-			NbtList doubles = nbt.getList("Pos", NbtType.DOUBLE);
+			NbtList doubles = nbt.getList("Pos", NbtElement.DOUBLE_TYPE);
 			Vec3d vec = entry.getValue().add(origin.getX(), origin.getY(), origin.getZ());
 			doubles.set(0, NbtOps.INSTANCE.createDouble(vec.x));
 			doubles.set(1, NbtOps.INSTANCE.createDouble(vec.y));
@@ -204,7 +204,7 @@ public class RelativeBlockSample implements BlockView, ModifiableWorld {
 
 		// TODO: is it ok if this is not executed with MinecraftServer#send?
 		this.entityContainer.forEach(((nbt, vec3d) -> {
-			NbtList doubles = nbt.getList("Pos", NbtType.DOUBLE);
+			NbtList doubles = nbt.getList("Pos", NbtElement.DOUBLE_TYPE);
 			Vec3d vec = vec3d.add(origin.getX(), origin.getY(), origin.getZ());
 			if (intersection.contains(new Vec3i(vec.x, vec.y, vec.z))) {
 				doubles.set(0, NbtOps.INSTANCE.createDouble(vec.x));

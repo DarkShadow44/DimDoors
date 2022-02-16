@@ -1,25 +1,26 @@
 package org.dimdev.dimdoors.listener.pocket;
 
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import dev.architectury.event.EventResult;
+import dev.architectury.event.events.common.InteractionEvent.LeftClickBlock;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.world.World;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 
 import java.util.List;
 
-public class UseBlockCallbackListener implements UseBlockCallback {
-	@Override
-	public ActionResult interact(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
-		List<UseBlockCallback> applicableAddons;
-		if (world.isClient) applicableAddons = PocketListenerUtil.applicableAddonsClient(UseBlockCallback.class, world, player.getBlockPos());
-		else applicableAddons = PocketListenerUtil.applicableAddons(UseBlockCallback.class, world, player.getBlockPos());
+public class UseBlockCallbackListener implements LeftClickBlock {
 
-		for (UseBlockCallback listener : applicableAddons) {
-			ActionResult result = listener.interact(player, world, hand, hitResult);
-			if (result != ActionResult.PASS) return result;
+	@Override
+	public EventResult click(PlayerEntity player, Hand hand, BlockPos pos, Direction face) {
+		List<LeftClickBlock> applicableAddons;
+		if (player.world.isClient) applicableAddons = PocketListenerUtil.applicableAddonsClient(LeftClickBlock.class, player.world, player.getBlockPos());
+		else applicableAddons = PocketListenerUtil.applicableAddons(LeftClickBlock.class, player.world, player.getBlockPos());
+
+		for (LeftClickBlock listener : applicableAddons) {
+			EventResult result = listener.click(player, hand, pos, face);
+			if (result.interruptsFurtherEvaluation()) return result;
 		}
-		return ActionResult.PASS;
+		return EventResult.pass();
 	}
 }

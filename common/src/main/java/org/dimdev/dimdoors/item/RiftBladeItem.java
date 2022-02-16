@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.block.DimensionalPortalBlock;
 import org.dimdev.dimdoors.block.ModBlocks;
 import org.dimdev.dimdoors.block.entity.EntranceRiftBlockEntity;
@@ -74,7 +74,7 @@ public class RiftBladeItem extends SwordItem {
 				return new TypedActionResult<>(ActionResult.SUCCESS, stack);
 			} else {
 				player.sendMessage(new TranslatableText(this.getTranslationKey() + ".rift_miss"), true);
-				RiftBlockEntity.showRiftCoreUntil = System.currentTimeMillis() + DimensionalDoorsInitializer.getConfig().getGraphicsConfig().highlightRiftCoreFor;
+				RiftBlockEntity.showRiftCoreUntil = System.currentTimeMillis() + DimensionalDoors.getConfig().getGraphicsConfig().highlightRiftCoreFor;
 				return new TypedActionResult<>(ActionResult.FAIL, stack);
 			}
 		}

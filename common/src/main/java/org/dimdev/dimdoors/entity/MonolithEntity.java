@@ -1,21 +1,9 @@
 package org.dimdev.dimdoors.entity;
 
-import java.util.Random;
-
-import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.util.math.Box;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
-import org.dimdev.dimdoors.entity.ai.MonolithAggroGoal;
-import org.dimdev.dimdoors.item.ModItems;
-import org.dimdev.dimdoors.sound.ModSoundEvents;
-import org.dimdev.dimdoors.world.ModDimensions;
-
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.control.LookControl;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -24,16 +12,22 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.dimdev.dimdoors.DimensionalDoors;
+import org.dimdev.dimdoors.entity.ai.MonolithAggroGoal;
+import org.dimdev.dimdoors.item.ModItems;
+import org.dimdev.dimdoors.sound.ModSoundEvents;
+import org.dimdev.dimdoors.world.ModDimensions;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import java.util.Random;
 
 public class MonolithEntity extends MobEntity {
     public static final int MAX_AGGRO = 250;
@@ -72,7 +66,7 @@ public class MonolithEntity extends MobEntity {
     }
 
     public boolean isDangerous() {
-        return DimensionalDoorsInitializer.getConfig().getMonolithsConfig().monolithTeleportation && (ModDimensions.isLimboDimension(this.world) || DimensionalDoorsInitializer.getConfig().getMonolithsConfig().dangerousLimboMonoliths);
+        return DimensionalDoors.getConfig().getMonolithsConfig().monolithTeleportation && (ModDimensions.isLimboDimension(this.world) || DimensionalDoors.getConfig().getMonolithsConfig().dangerousLimboMonoliths);
     }
 
     @Override
@@ -278,10 +272,10 @@ public class MonolithEntity extends MobEntity {
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         setAggro(nbt.getInt("Aggro"));
-        if (nbt.contains("scale", NbtType.FLOAT)) {
+        if (nbt.contains("scale", NbtElement.FLOAT_TYPE)) {
         	setScale(nbt.getFloat("scale"));
 		}
-        if (nbt.contains("pitch", NbtType.FLOAT)) {
+        if (nbt.contains("pitch", NbtElement.FLOAT_TYPE)) {
 			setPitch(nbt.getFloat("pitch"));
 		}
     }

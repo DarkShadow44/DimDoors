@@ -1,5 +1,6 @@
 package org.dimdev.dimdoors.client;
 
+import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import org.dimdev.dimdoors.block.ModBlocks;
@@ -23,8 +24,8 @@ public class DimensionalDoorsClientInitializer implements ClientModInitializer {
         ModEntityTypes.initClient();
 		ModFluids.initClient();
 //        ModBlockEntityTypes.initClient();
-		BlockEntityRendererRegistry.INSTANCE.register(ModBlockEntityTypes.ENTRANCE_RIFT, ctx -> new EntranceRiftBlockEntityRenderer());
-		BlockEntityRendererRegistry.INSTANCE.register(ModBlockEntityTypes.DETACHED_RIFT, ctx -> new DetachedRiftBlockEntityRenderer());
+		BlockEntityRendererRegistry.register(ModBlockEntityTypes.ENTRANCE_RIFT, ctx -> new EntranceRiftBlockEntityRenderer());
+		BlockEntityRendererRegistry.register(ModBlockEntityTypes.DETACHED_RIFT, ctx -> new DetachedRiftBlockEntityRenderer());
         ModBlocks.initClient();
 		ModEntityModelLayers.initClient();
 		ModParticleTypes.initClient();
@@ -35,6 +36,7 @@ public class DimensionalDoorsClientInitializer implements ClientModInitializer {
     }
 
     private void registerListeners() {
+		//TODO: Figure this out.
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> ((ExtendedClientPlayNetworkHandler) handler).getDimDoorsPacketHandler().init());
 
 		ClientPlayConnectionEvents.DISCONNECT.register(((handler, client) -> {

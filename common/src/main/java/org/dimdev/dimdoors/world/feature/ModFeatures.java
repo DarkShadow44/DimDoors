@@ -1,7 +1,7 @@
 package org.dimdev.dimdoors.world.feature;
 
 import com.google.common.collect.ImmutableSet;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.block.ModBlocks;
 import org.dimdev.dimdoors.world.feature.gateway.LimboGatewayFeature;
 import org.dimdev.dimdoors.world.feature.gateway.schematic.SandstonePillarsGateway;
@@ -121,9 +121,9 @@ public final class ModFeatures {
 		}
 
 		static {
-			SANDSTONE_PILLARS_PLACED_FEATURE = Configured.SANDSTONE_PILLARS_CONFIGURED_FEATURE.withPlacement(RarityFilterPlacementModifier.of(DimensionalDoorsInitializer.getConfig().getWorldConfig().gatewayGenChance), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of());
-			TWO_PILLARS_PLACED_FEATURE = Configured.SANDSTONE_PILLARS_CONFIGURED_FEATURE.withPlacement(RarityFilterPlacementModifier.of(DimensionalDoorsInitializer.getConfig().getWorldConfig().gatewayGenChance), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of());
-			LIMBO_GATEWAY_PLACED_FEATURE = Configured.LIMBO_GATEWAY_CONFIGURED_FEATURE.withPlacement(RarityFilterPlacementModifier.of(DimensionalDoorsInitializer.getConfig().getWorldConfig().gatewayGenChance), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of());
+			SANDSTONE_PILLARS_PLACED_FEATURE = Configured.SANDSTONE_PILLARS_CONFIGURED_FEATURE.withPlacement(RarityFilterPlacementModifier.of(DimensionalDoors.getConfig().getWorldConfig().gatewayGenChance), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of());
+			TWO_PILLARS_PLACED_FEATURE = Configured.SANDSTONE_PILLARS_CONFIGURED_FEATURE.withPlacement(RarityFilterPlacementModifier.of(DimensionalDoors.getConfig().getWorldConfig().gatewayGenChance), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of());
+			LIMBO_GATEWAY_PLACED_FEATURE = Configured.LIMBO_GATEWAY_CONFIGURED_FEATURE.withPlacement(RarityFilterPlacementModifier.of(DimensionalDoors.getConfig().getWorldConfig().gatewayGenChance), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of());
 			SOLID_STATIC_ORE_PLACED_FEATURE = Configured.SOLID_STATIC_ORE_CONFIGURED_FEATURE.withPlacement(CountPlacementModifier.of(3), HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.getTop()), SquarePlacementModifier.of(), BiomePlacementModifier.of());
 			DECAYED_BLOCK_ORE_PLACED_FEATURE = Configured.DECAYED_BLOCK_ORE_CONFIGURED_FEATURE.withPlacement(CountPlacementModifier.of(4), HeightRangePlacementModifier.uniform(YOffset.fixed(0), YOffset.fixed(79)), SquarePlacementModifier.of(), BiomePlacementModifier.of());
 			ETERNAL_FLUID_SPRING_PLACED_FEATURE = Configured.ETERNAL_FLUID_SPRING_CONFIGURED_FEATURE.withPlacement(CountPlacementModifier.of(25), SquarePlacementModifier.of(), HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(192)), BiomePlacementModifier.of());

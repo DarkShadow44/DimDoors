@@ -1,18 +1,15 @@
 package org.dimdev.dimdoors.world;
 
-import java.util.Objects;
-
-import org.dimdev.dimdoors.world.pocket.BlankChunkGenerator;
-
+import dev.architectury.event.events.common.LifecycleEvent;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
+import org.dimdev.dimdoors.world.pocket.BlankChunkGenerator;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import java.util.Objects;
 
 public final class ModDimensions {
     public static final RegistryKey<World> LIMBO = RegistryKey.of(Registry.WORLD_KEY, new Identifier("dimdoors:limbo"));
@@ -48,7 +45,7 @@ public final class ModDimensions {
     }
 
     public static void init() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+        LifecycleEvent.SERVER_STARTED.register(server -> {
             ModDimensions.LIMBO_TYPE = server.getRegistryManager().get(Registry.DIMENSION_TYPE_KEY).get(LIMBO_TYPE_KEY);
             ModDimensions.POCKET_TYPE = server.getRegistryManager().get(Registry.DIMENSION_TYPE_KEY).get(POCKET_TYPE_KEY);
             ModDimensions.LIMBO_DIMENSION = server.getWorld(LIMBO);

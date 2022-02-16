@@ -2,9 +2,7 @@ package org.dimdev.dimdoors.item;
 
 import java.util.List;
 
-import net.fabricmc.api.ModInitializer;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
-import org.dimdev.dimdoors.ModConfig;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.block.ModBlocks;
 import org.dimdev.dimdoors.block.entity.DetachedRiftBlockEntity;
 import org.dimdev.dimdoors.client.ToolTipHelper;
@@ -70,7 +68,7 @@ public class RiftSignatureItem extends Item {
 			return ActionResult.SUCCESS;
 		}
 
-		if(ModDimensions.isPrivatePocketDimension(world) && !DimensionalDoorsInitializer.getConfig().getPocketsConfig().canUseRiftSignatureInPrivatePockets) {
+		if(ModDimensions.isPrivatePocketDimension(world) && !DimensionalDoors.getConfig().getPocketsConfig().canUseRiftSignatureInPrivatePockets) {
 			player.sendMessage(new TranslatableText("tools.signature_blocked").formatted(Formatting.BLACK), true);
 			return ActionResult.FAIL;
 		}
@@ -90,7 +88,7 @@ public class RiftSignatureItem extends Item {
 					clearSource(stack); // TODO: But is this fair? It's a rather hidden way of unbinding your signature!
 					return ActionResult.FAIL;
 				}
-				World sourceWorld = DimensionalDoorsInitializer.getWorld(target.world);
+				World sourceWorld = DimensionalDoors.getWorld(target.world);
 				sourceWorld.setBlockState(target.getBlockPos(), ModBlocks.DETACHED_RIFT.getDefaultState());
 				DetachedRiftBlockEntity rift1 = (DetachedRiftBlockEntity) target.getBlockEntity();
 				rift1.setDestination(RiftReference.tryMakeRelative(target, new Location((ServerWorld) world, pos)));

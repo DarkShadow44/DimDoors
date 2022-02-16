@@ -1,6 +1,5 @@
 package org.dimdev.dimdoors.world.pocket.type.addon;
 
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -33,8 +32,8 @@ public abstract class AddonContainer<T extends ContainedAddon> implements Pocket
 	public PocketAddon fromNbt(NbtCompound nbt) {
 		this.id = Identifier.tryParse(nbt.getString("id"));
 
-		if (nbt.contains("addons", NbtType.LIST)) {
-			for (NbtElement addonTag : nbt.getList("addons", NbtType.COMPOUND)) {
+		if (nbt.contains("addons", NbtElement.LIST_TYPE)) {
+			for (NbtElement addonTag : nbt.getList("addons", NbtElement.COMPOUND_TYPE)) {
 				addons.add((T) PocketAddon.deserialize((NbtCompound) addonTag));
 			}
 		}

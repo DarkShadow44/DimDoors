@@ -1,0 +1,46 @@
+{
+  "required": true,
+  "package": "org.dimdev.dimdoors.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "BlockMixin",
+    "EntityMixin",
+    "ExplosionMixin",
+    "ExtendedServerPlayNetworkhandlerMixin",
+    "ItemMixin",
+    "ItemMixin$SettingsMixin",
+    "PlayerEntityMixin",
+    "RegistryKeyMixin",
+    "ServerPlayerEntityMixin",
+    "ServerPlayerInteractionManagerMixin",
+    "ServerPlayNetworkHandlerMixin",
+    "ServerWorldMixin",
+    "StructurePoolMixin",
+    "WorldMixin",
+    "accessor.ChunkGeneratorAccessor",
+    "accessor.DefaultParticleTypeAccessor",
+    "accessor.DirectionAccessor",
+    "accessor.EntityAccessor",
+    "accessor.GenerationSettingsAccessor",
+    "accessor.ItemGroupAccessor",
+    "accessor.ListTagAccessor",
+    "accessor.RecipesProviderAccessor",
+    "accessor.RedstoneWireBlockAccessor",
+    "accessor.StatsAccessor"
+  ],
+  "client": [
+    "client.ClientPlayerInteractionManagerMixin",
+    "client.ClientPlayNetworkHandlerMixin",
+    "client.ExtendedClientPlayNetworkHandlerMixin",
+    "client.GameRendererMixin",
+    "client.InGameHudMixin",
+    "client.PostProcessShaderMixin",
+    "client.WorldRendererMixin",
+    "client.BackgroundRendererMixin",
+    "client.accessor.RenderLayerAccessor",
+    "client.accessor.WorldRendererAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

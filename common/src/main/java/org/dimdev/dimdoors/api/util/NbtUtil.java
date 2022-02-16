@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
-import net.fabricmc.fabric.api.util.NbtType;
 
 public class NbtUtil {
 	public static <T> T deserialize(NbtElement data, Codec<T> codec) {
@@ -18,7 +17,7 @@ public class NbtUtil {
 	}
 
 	public static NbtCompound asNbtCompound(NbtElement nbt, String error) {
-		if (nbt == null || nbt.getType() == NbtType.COMPOUND) {
+		if (nbt == null || nbt.getType() == NbtElement.COMPOUND_TYPE) {
 			return (NbtCompound) nbt;
 		}
 

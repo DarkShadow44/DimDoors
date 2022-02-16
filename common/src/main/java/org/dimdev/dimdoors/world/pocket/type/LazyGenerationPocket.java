@@ -1,8 +1,8 @@
 package org.dimdev.dimdoors.world.pocket.type;
 
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
@@ -74,8 +74,8 @@ public class LazyGenerationPocket extends Pocket {
 	public Pocket fromNbt(NbtCompound nbt) {
 		super.fromNbt(nbt);
 
-		if (nbt.contains("generator", NbtType.COMPOUND)) generator = (LazyPocketGenerator) PocketGenerator.deserialize(nbt.getCompound("generator"));
-		if (nbt.contains("to_be_genned_chunks", NbtType.INT)) toBeGennedChunkCount = nbt.getInt("to_be_genned_chunks");
+		if (nbt.contains("generator", NbtElement.COMPOUND_TYPE)) generator = (LazyPocketGenerator) PocketGenerator.deserialize(nbt.getCompound("generator"));
+		if (nbt.contains("to_be_genned_chunks", NbtElement.INT_TYPE)) toBeGennedChunkCount = nbt.getInt("to_be_genned_chunks");
 
 		return this;
 	}

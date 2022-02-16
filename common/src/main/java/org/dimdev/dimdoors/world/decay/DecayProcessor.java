@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.nbt.NbtCompound;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.world.decay.processors.SelfDecayProcessor;
 import org.dimdev.dimdoors.world.decay.processors.SimpleDecayProcesor;
 
@@ -77,7 +77,7 @@ public interface DecayProcessor {
 		NbtCompound toNbt(NbtCompound nbt);
 
         static void register() {
-            DimensionalDoorsInitializer.apiSubscribers.forEach(d -> d.registerDecayProcessors(REGISTRY));
+            DimensionalDoors.apiSubscribers.forEach(d -> d.registerDecayProcessors(REGISTRY));
         }
 
         static <U extends DecayProcessor> DecayProcessorType<U> register(Identifier id, Supplier<U> factory) {

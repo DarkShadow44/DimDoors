@@ -22,7 +22,7 @@ import net.minecraft.util.registry.Registry;
 
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.api.util.function.QuadFunction;
 import org.dimdev.dimdoors.block.door.DimensionalDoorBlock;
 import org.dimdev.dimdoors.block.door.DimensionalTrapdoorBlock;
@@ -69,7 +69,7 @@ public class DimensionalDoorItemRegistrar {
 	}
 
 	public void handleEntry(Identifier identifier, Item original) {
-		if (DimensionalDoorsInitializer.getConfig().getDoorsConfig().isAllowed(identifier)) {
+		if (DimensionalDoors.getConfig().getDoorsConfig().isAllowed(identifier)) {
 			if (original instanceof TallBlockItem) {
 				Block block = ((TallBlockItem) original).getBlock();
 				handleEntry(identifier, original, block, AutoGenDimensionalDoorItem::new);

@@ -1,32 +1,30 @@
 package org.dimdev.dimdoors.pockets.modifier;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.base.MoreObjects;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
-
-import net.fabricmc.fabric.api.util.NbtType;
-
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.chunk.Chunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.dimdev.dimdoors.api.util.BlockBoxUtil;
-import org.dimdev.dimdoors.pockets.PocketGenerationContext;
 import org.dimdev.dimdoors.api.util.math.Equation;
+import org.dimdev.dimdoors.pockets.PocketGenerationContext;
 import org.dimdev.dimdoors.util.schematic.SchematicBlockPalette;
 import org.dimdev.dimdoors.world.pocket.type.LazyGenerationPocket;
 import org.dimdev.dimdoors.world.pocket.type.Pocket;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ShellModifier implements LazyModifier {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -125,7 +123,7 @@ public class ShellModifier implements LazyModifier {
 
 	@Override
 	public Modifier fromNbt(NbtCompound nbt) {
-		for (NbtElement layerNbt : nbt.getList("layers", NbtType.COMPOUND)) {
+		for (NbtElement layerNbt : nbt.getList("layers", NbtElement.COMPOUND_TYPE)) {
 			NbtCompound nbtCompound = (NbtCompound) layerNbt;
 			try {
 				Layer layer = Layer.fromNbt(nbtCompound);
@@ -135,7 +133,7 @@ public class ShellModifier implements LazyModifier {
 			}
 		}
 
-		if (nbt.contains("box_to_draw_around", NbtType.INT_ARRAY)) {
+		if (nbt.contains("box_to_draw_around", NbtElement.BYTE_ARRAY_TYPE)) {
 			int[] box = nbt.getIntArray("box_to_draw_around");
 			boxToDrawAround = BlockBox.create(new Vec3i(box[0], box[1], box[2]), new Vec3i(box[3], box[4], box[5]));
 		}

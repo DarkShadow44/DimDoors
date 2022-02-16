@@ -1,10 +1,13 @@
 package org.dimdev.dimdoors.pockets.generator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.chunk.Chunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dimdev.dimdoors.api.util.BlockPlacementType;
@@ -21,15 +24,10 @@ import org.dimdev.dimdoors.world.level.registry.DimensionalRegistry;
 import org.dimdev.dimdoors.world.pocket.type.LazyGenerationPocket;
 import org.dimdev.dimdoors.world.pocket.type.Pocket;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.chunk.Chunk;
-
-import net.fabricmc.fabric.api.util.NbtType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SchematicGenerator extends LazyPocketGenerator{
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -77,11 +75,11 @@ public class SchematicGenerator extends LazyPocketGenerator{
 
 		this.id = nbt.getString("id"); // TODO: should we force having the "dimdoors:" in the json?
 		this.templateID = new Identifier("dimdoors", id);
-		if (nbt.contains("origin", NbtType.INT_ARRAY)) {
+		if (nbt.contains("origin", NbtElement.INT_ARRAY_TYPE)) {
 			int[] originInts = nbt.getIntArray("origin");
 			this.origin = new BlockPos(originInts[0], originInts[1], originInts[2]);
 		}
-		if (nbt.contains("placement_type", NbtType.STRING)) placementType = BlockPlacementType.getFromId(nbt.getString("placement_type"));
+		if (nbt.contains("placement_type", NbtElement.STRING_TYPE)) placementType = BlockPlacementType.getFromId(nbt.getString("placement_type"));
 
 		return this;
 	}

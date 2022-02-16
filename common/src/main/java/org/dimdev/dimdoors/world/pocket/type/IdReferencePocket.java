@@ -1,7 +1,7 @@
 package org.dimdev.dimdoors.world.pocket.type;
 
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import org.dimdev.dimdoors.world.level.registry.DimensionalRegistry;
 import org.dimdev.dimdoors.world.pocket.PocketDirectory;
 
@@ -63,7 +63,7 @@ public class IdReferencePocket extends AbstractPocket<IdReferencePocket> {
 
 		@Override
 		public IdReferencePocketBuilder fromNbt(NbtCompound nbt) {
-			if (nbt.contains("referenced_id", NbtType.INT)) referencedId = nbt.getInt("referenced_id");
+			if (nbt.contains("referenced_id", NbtElement.INT_TYPE)) referencedId = nbt.getInt("referenced_id");
 			return this;
 		}
 

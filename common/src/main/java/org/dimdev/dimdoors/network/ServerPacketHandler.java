@@ -1,5 +1,6 @@
 package org.dimdev.dimdoors.network;
 
+import dev.architectury.networking.NetworkChannel;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -61,6 +62,7 @@ public class ServerPacketHandler implements ServerPacketListener {
 
 	public static boolean sendPacket(ServerPlayerEntity player, SimplePacket<?> packet) {
 		try {
+			NetworkChannel.create().
 			ServerPlayNetworking.send(player, packet.channelId(), packet.write(PacketByteBufs.create()));
 			return true;
 		} catch (IOException e) {

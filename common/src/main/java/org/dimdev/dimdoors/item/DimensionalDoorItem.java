@@ -2,16 +2,13 @@ package org.dimdev.dimdoors.item;
 
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.IntStream;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.BlockItem;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.block.ModBlocks;
 import org.dimdev.dimdoors.block.RiftProvider;
 import org.dimdev.dimdoors.block.entity.DetachedRiftBlockEntity;
@@ -68,7 +65,7 @@ public class DimensionalDoorItem extends BlockItem {
 
 			if (context.getWorld().isClient) {
 				context.getPlayer().sendMessage(new TranslatableText("rifts.entrances.rift_too_close"), true);
-				RiftBlockEntity.showRiftCoreUntil = System.currentTimeMillis() + DimensionalDoorsInitializer.getConfig().getGraphicsConfig().highlightRiftCoreFor;
+				RiftBlockEntity.showRiftCoreUntil = System.currentTimeMillis() + DimensionalDoors.getConfig().getGraphicsConfig().highlightRiftCoreFor;
 			}
 
 			return ActionResult.FAIL;

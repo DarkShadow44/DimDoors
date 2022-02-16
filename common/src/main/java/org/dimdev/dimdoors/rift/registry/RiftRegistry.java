@@ -43,11 +43,11 @@ public class RiftRegistry {
 
 		RiftRegistry riftRegistry = new RiftRegistry();
 
-		NbtList riftsNBT = nbt.getList("rifts", NbtType.COMPOUND);
+		NbtList riftsNBT = nbt.getList("rifts", NbtElement.COMPOUND_TYPE);
 		String riftTypeId = RegistryVertex.registry.getId(RegistryVertex.RegistryVertexType.RIFT).toString();
 		CompletableFuture<List<Rift>> futureRifts = CompletableFuture.supplyAsync(() -> riftsNBT.parallelStream().unordered().map(NbtCompound.class::cast).filter(nbtCompound -> nbtCompound.getString("type").equals(riftTypeId)).map(Rift::fromNbt).collect(Collectors.toList()));
 
-		NbtList pocketsNBT = nbt.getList("pockets", NbtType.COMPOUND);
+		NbtList pocketsNBT = nbt.getList("pockets", NbtElement.COMPOUND_TYPE);
 		CompletableFuture<List<PocketEntrancePointer>> futurePockets = CompletableFuture.supplyAsync(() -> pocketsNBT.stream().map(NbtCompound.class::cast).map(PocketEntrancePointer::fromNbt).collect(Collectors.toList()));
 
 		futureRifts.join().forEach(rift -> {
@@ -63,7 +63,7 @@ public class RiftRegistry {
 		});
 
 		// Read the connections between links that have a source or destination in this dimension
-		NbtList linksNBT = nbt.getList("links", NbtType.COMPOUND);
+		NbtList linksNBT = nbt.getList("links", NbtElement.COMPOUND_TYPE);
 		for (NbtElement linkNBT : linksNBT) {
 			RegistryVertex from = riftRegistry.uuidMap.get(((NbtCompound) linkNBT).getUuid("from"));
 			RegistryVertex to = riftRegistry.uuidMap.get(((NbtCompound) linkNBT).getUuid("to"));
@@ -73,9 +73,9 @@ public class RiftRegistry {
 			}
 		}
 
-		riftRegistry.lastPrivatePocketEntrances = riftRegistry.readPlayerRiftPointers(nbt.getList("last_private_pocket_entrances", NbtType.COMPOUND));
-		riftRegistry.lastPrivatePocketExits = riftRegistry.readPlayerRiftPointers(nbt.getList("last_private_pocket_exits", NbtType.COMPOUND));
-		riftRegistry.overworldRifts = riftRegistry.readPlayerRiftPointers(nbt.getList("overworld_rifts", NbtType.COMPOUND));
+		riftRegistry.lastPrivatePocketEntrances = riftRegistry.readPlayerRiftPointers(nbt.getList("last_private_pocket_entrances", NbtElement.COMPOUND_TYPE));
+		riftRegistry.lastPrivatePocketExits = riftRegistry.readPlayerRiftPointers(nbt.getList("last_private_pocket_exits", NbtElement.COMPOUND_TYPE));
+		riftRegistry.overworldRifts = riftRegistry.readPlayerRiftPointers(nbt.getList("overworld_rifts", NbtElement.COMPOUND_TYPE));
 		return riftRegistry;
 	}
 

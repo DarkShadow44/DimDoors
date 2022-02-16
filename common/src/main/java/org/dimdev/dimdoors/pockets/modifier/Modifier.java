@@ -8,7 +8,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
 
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.pockets.PocketGenerationContext;
 import org.dimdev.dimdoors.world.pocket.type.Pocket;
 
@@ -55,7 +55,7 @@ public interface Modifier {
 		NbtCompound toNbt(NbtCompound nbt);
 
 		static void register() {
-			DimensionalDoorsInitializer.apiSubscribers.forEach(d -> d.registerModifierTypes(REGISTRY));
+			DimensionalDoors.apiSubscribers.forEach(d -> d.registerModifierTypes(REGISTRY));
 		}
 
 		static <U extends Modifier> ModifierType<U> register(Identifier id, Supplier<U> factory) {

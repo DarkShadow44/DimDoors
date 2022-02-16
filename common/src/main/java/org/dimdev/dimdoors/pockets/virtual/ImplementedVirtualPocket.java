@@ -8,7 +8,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
 
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.pockets.virtual.reference.IdReference;
 import org.dimdev.dimdoors.pockets.virtual.reference.PocketGeneratorReference;
 import org.dimdev.dimdoors.pockets.virtual.reference.TagReference;
@@ -54,7 +54,7 @@ public interface ImplementedVirtualPocket extends VirtualPocket {
 		NbtCompound toNbt(NbtCompound nbt);
 
 		static void register() {
-			DimensionalDoorsInitializer.apiSubscribers.forEach(d -> d.registerVirtualSingularPocketTypes(REGISTRY));
+			DimensionalDoors.apiSubscribers.forEach(d -> d.registerVirtualSingularPocketTypes(REGISTRY));
 		}
 
 		static <U extends ImplementedVirtualPocket> VirtualPocketType<U> register(Identifier id, Supplier<U> factory) {

@@ -1,13 +1,40 @@
+repositories {
+	flatDir {
+		dirs 'libs'
+	}
+}
+
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+
+	modImplementation(fileTree(dir: 'libs', include: '*.jar'))
+
+	modCompileOnly("me.shedaniel.cloth:cloth-config:${rootProject.cloth_config_version}") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
     // Remove the next line if you don't want to depend on the API
     modApi "dev.architectury:architectury:${rootProject.architectury_version}"
 }
 
 architectury {
     common()
+}
+
+loom {
+	accessWidenerPath.set(file("src/main/resources/dimdoors.accesswidener"))
+}
+
+
+sourceSets {
+	main {
+		java {
+			srcDir "src/main/schematics"
+			srcDir "src/main/config"
+		}
+	}
+	datagen
 }
 
 publishing {

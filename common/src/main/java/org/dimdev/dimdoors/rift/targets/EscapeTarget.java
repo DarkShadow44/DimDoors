@@ -1,38 +1,31 @@
 package org.dimdev.dimdoors.rift.targets;
 
-import java.util.Random;
-import java.util.UUID;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.sk89q.worldedit.util.formatting.text.BlockNbtComponent;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.World;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
-import org.dimdev.dimdoors.ModConfig;
-import org.dimdev.dimdoors.api.rift.target.EntityTarget;
-import org.dimdev.dimdoors.api.util.Location;
-import org.dimdev.dimdoors.api.util.TeleportUtil;
-import org.dimdev.dimdoors.block.ModBlocks;
-import org.dimdev.dimdoors.block.UnravelUtil;
-import org.dimdev.dimdoors.block.entity.RiftBlockEntity;
-import org.dimdev.dimdoors.world.ModDimensions;
-import org.dimdev.dimdoors.world.level.registry.DimensionalRegistry;
-import org.dimdev.dimdoors.world.pocket.VirtualLocation;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.EulerAngle;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.dimdev.dimdoors.DimensionalDoors;
+import org.dimdev.dimdoors.api.rift.target.EntityTarget;
+import org.dimdev.dimdoors.api.util.Location;
+import org.dimdev.dimdoors.api.util.TeleportUtil;
+import org.dimdev.dimdoors.block.ModBlocks;
+import org.dimdev.dimdoors.block.UnravelUtil;
+import org.dimdev.dimdoors.world.ModDimensions;
+import org.dimdev.dimdoors.world.pocket.VirtualLocation;
+
+import java.util.Random;
+import java.util.UUID;
 
 import static org.dimdev.dimdoors.api.util.EntityUtils.chat;
 
@@ -101,7 +94,7 @@ public class EscapeTarget extends VirtualTarget implements EntityTarget { // TOD
 				entity.fallDistance = 0;
 				Random random = new Random();
 				BlockPos.iterateOutwards(location.pos.add(0, -3, 0), 3, 2, 3).forEach((pos1 -> {
-					if (random.nextFloat() < (1 / ((float) location.pos.getSquaredDistance(pos1))) * DimensionalDoorsInitializer.getConfig().getLimboConfig().limboBlocksCorruptingOverworldAmount) {
+					if (random.nextFloat() < (1 / ((float) location.pos.getSquaredDistance(pos1))) * DimensionalDoors.getConfig().getLimboConfig().limboBlocksCorruptingOverworldAmount) {
 						Block block = location.getWorld().getBlockState(pos1).getBlock();
 						if (UnravelUtil.unravelBlocksMap.containsKey(block))
 							location.getWorld().setBlockState(pos1, UnravelUtil.unravelBlocksMap.get(block).getDefaultState());

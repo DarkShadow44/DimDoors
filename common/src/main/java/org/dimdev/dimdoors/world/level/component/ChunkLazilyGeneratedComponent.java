@@ -1,6 +1,7 @@
 package org.dimdev.dimdoors.world.level.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
+import net.minecraft.nbt.NbtElement;
 import org.dimdev.dimdoors.DimensionalDoorsComponents;
 
 import net.fabricmc.fabric.api.util.NbtType;
@@ -25,7 +26,7 @@ public class ChunkLazilyGeneratedComponent implements Component {
 
 	@Override
 	public void readFromNbt(NbtCompound nbt) {
-		if (nbt.contains("has_been_lazy_genned", NbtType.INT)) {
+		if (nbt.contains("has_been_lazy_genned", NbtElement.INT_TYPE)) {
 			hasBeenLazyGenned = nbt.getInt("has_been_lazy_genned") == 1;
 		}
 	}

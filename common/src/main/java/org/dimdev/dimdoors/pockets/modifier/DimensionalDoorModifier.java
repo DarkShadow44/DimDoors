@@ -1,36 +1,34 @@
 package org.dimdev.dimdoors.pockets.modifier;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import net.fabricmc.fabric.api.util.NbtType;
+import com.google.common.base.MoreObjects;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
-
-import com.google.common.base.MoreObjects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dimdev.dimdoors.api.util.NbtEquations;
+import org.dimdev.dimdoors.api.util.math.Equation;
+import org.dimdev.dimdoors.api.util.math.Equation.EquationParseException;
 import org.dimdev.dimdoors.block.door.DimensionalDoorBlock;
 import org.dimdev.dimdoors.block.entity.EntranceRiftBlockEntity;
 import org.dimdev.dimdoors.block.entity.ModBlockEntityTypes;
 import org.dimdev.dimdoors.block.entity.RiftData;
+import org.dimdev.dimdoors.pockets.PocketGenerationContext;
 import org.dimdev.dimdoors.pockets.PocketLoader;
 import org.dimdev.dimdoors.rift.targets.IdMarker;
-import org.dimdev.dimdoors.pockets.PocketGenerationContext;
-import org.dimdev.dimdoors.api.util.NbtEquations;
-import org.dimdev.dimdoors.api.util.math.Equation;
-import org.dimdev.dimdoors.api.util.math.Equation.EquationParseException;
 import org.dimdev.dimdoors.world.pocket.type.LazyGenerationPocket;
 import org.dimdev.dimdoors.world.pocket.type.Pocket;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class DimensionalDoorModifier implements LazyCompatibleModifier {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -64,11 +62,11 @@ public class DimensionalDoorModifier implements LazyCompatibleModifier {
 		}
 		doorType = (DimensionalDoorBlock) doorBlock;
 
-		if (nbt.getType("rift_data") == NbtType.STRING) {
+		if (nbt.getType("rift_data") == NbtElement.STRING_TYPE) {
 			doorDataReference = nbt.getString("rift_data");
 			doorData = PocketLoader.getInstance().getDataNbtCompound(doorDataReference);
 		}
-		else if (nbt.getType("rift_data") == NbtType.COMPOUND) doorData = nbt.getCompound("rift_data");
+		else if (nbt.getType("rift_data") == NbtElement.COMPOUND_TYPE) doorData = nbt.getCompound("rift_data");
 
 		try {
 			x = nbt.getString("x");

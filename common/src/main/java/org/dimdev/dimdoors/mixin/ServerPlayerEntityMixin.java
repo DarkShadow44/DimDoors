@@ -1,18 +1,13 @@
 package org.dimdev.dimdoors.mixin;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerRecipeBook;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
 import org.dimdev.dimdoors.block.UnravelledFabricBlock;
 import org.dimdev.dimdoors.criteria.ModCriteria;
 import org.dimdev.dimdoors.entity.limbo.LimboEntranceSource;
 import org.dimdev.dimdoors.entity.stat.ModStats;
 import org.dimdev.dimdoors.api.util.TeleportUtil;
-import org.dimdev.dimdoors.item.ModItems;
-import org.dimdev.dimdoors.network.ExtendedServerPlayNetworkHandler;
-import org.dimdev.dimdoors.network.packet.s2c.PlayerInventorySlotUpdateS2CPacket;
 import org.dimdev.dimdoors.world.ModDimensions;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

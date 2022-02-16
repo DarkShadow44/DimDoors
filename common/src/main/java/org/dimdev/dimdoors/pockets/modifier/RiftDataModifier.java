@@ -1,5 +1,16 @@
 package org.dimdev.dimdoors.pockets.modifier;
 
+import com.google.common.base.MoreObjects;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import org.dimdev.dimdoors.api.util.NbtEquations;
+import org.dimdev.dimdoors.block.entity.RiftBlockEntity;
+import org.dimdev.dimdoors.block.entity.RiftData;
+import org.dimdev.dimdoors.pockets.PocketGenerationContext;
+import org.dimdev.dimdoors.pockets.PocketLoader;
+import org.dimdev.dimdoors.rift.targets.VirtualTarget;
+import org.dimdev.dimdoors.world.pocket.type.Pocket;
+
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.List;
@@ -7,16 +18,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.nbt.NbtCompound;
-import com.google.common.base.MoreObjects;
-import org.dimdev.dimdoors.block.entity.RiftBlockEntity;
-import org.dimdev.dimdoors.block.entity.RiftData;
-import org.dimdev.dimdoors.pockets.PocketLoader;
-import org.dimdev.dimdoors.rift.targets.VirtualTarget;
-import org.dimdev.dimdoors.pockets.PocketGenerationContext;
-import org.dimdev.dimdoors.api.util.NbtEquations;
-import org.dimdev.dimdoors.world.pocket.type.Pocket;
 
 public class RiftDataModifier implements Modifier {
 	public static final String KEY = "rift_data";
@@ -27,11 +28,11 @@ public class RiftDataModifier implements Modifier {
 
 	@Override
 	public Modifier fromNbt(NbtCompound nbt) {
-		if (nbt.getType("rift_data") == NbtType.STRING) {
+		if (nbt.getType("rift_data") == NbtElement.STRING_TYPE) {
 			doorDataReference = nbt.getString("rift_data");
 			doorData = PocketLoader.getInstance().getDataNbtCompound(doorDataReference);
 		}
-		else if (nbt.getType("rift_data") == NbtType.COMPOUND) doorData = nbt.getCompound("rift_data");
+		else if (nbt.getType("rift_data") == NbtElement.COMPOUND_TYPE) doorData = nbt.getCompound("rift_data");
 
 		ids = stream(nbt.getByteArray("ids")).boxed().collect(Collectors.toList());
 		return this;

@@ -14,7 +14,7 @@ import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.SpongeSchematicReader;
 import com.sk89q.worldedit.fabric.FabricAdapter;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.pockets.PocketTemplate;
 import org.dimdev.dimdoors.util.schematic.Schematic;
 
@@ -27,7 +27,7 @@ import net.minecraft.text.TranslatableText;
 public class WorldeditHelper {
 	static int load(ServerCommandSource source, PocketTemplate template) throws CommandSyntaxException {
 		ServerPlayerEntity player = source.getPlayer();
-		boolean async = DimensionalDoorsInitializer.getConfig().getPocketsConfig().asyncWorldEditPocketLoading;
+		boolean async = DimensionalDoors.getConfig().getPocketsConfig().asyncWorldEditPocketLoading;
 		Consumer<Runnable> taskAcceptor = async ? r -> source.getServer().execute(r) : Runnable::run;
 		Runnable task = () -> {
 			NbtCompound nbt = Schematic.toNbt(template.getSchematic());

@@ -3,7 +3,7 @@ package org.dimdev.dimdoors.entity.ai;
 import java.util.EnumSet;
 import java.util.Random;
 
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.entity.MonolithEntity;
 import org.dimdev.dimdoors.entity.stat.ModStats;
 import org.dimdev.dimdoors.item.ModItems;
@@ -93,7 +93,7 @@ public class MonolithAggroGoal extends Goal {
             }
 
             // Teleport the target player if various conditions are met
-            if (this.mob.getAggro() >= MAX_AGGRO && DimensionalDoorsInitializer.getConfig().getMonolithsConfig().monolithTeleportation && !this.target.isCreative() && this.mob.isDangerous()) {
+            if (this.mob.getAggro() >= MAX_AGGRO && DimensionalDoors.getConfig().getMonolithsConfig().monolithTeleportation && !this.target.isCreative() && this.mob.isDangerous()) {
                 this.mob.setAggro(0);
 				this.target.teleport(this.target.getX(), this.target.getY() + 256, this.target.getZ());
                 this.target.world.playSound(null, new BlockPos(this.target.getPos()), ModSoundEvents.CRACK, SoundCategory.HOSTILE, 13, 1);

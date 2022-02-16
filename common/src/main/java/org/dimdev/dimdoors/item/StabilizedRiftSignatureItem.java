@@ -1,19 +1,13 @@
 package org.dimdev.dimdoors.item;
 
-import java.util.List;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.block.ModBlocks;
 import org.dimdev.dimdoors.block.entity.DetachedRiftBlockEntity;
-import org.dimdev.dimdoors.client.ToolTipHelper;
 import org.dimdev.dimdoors.rift.targets.RiftReference;
 import org.dimdev.dimdoors.sound.ModSoundEvents;
 import org.dimdev.dimdoors.api.util.Location;
 import org.dimdev.dimdoors.api.util.RotatedLocation;
 
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -22,7 +16,6 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -78,7 +71,7 @@ public class StabilizedRiftSignatureItem extends Item { // TODO: common supercla
 					// Don't clear source, stabilized signatures always stay bound
 					return ActionResult.FAIL;
 				}
-				World targetWorld = DimensionalDoorsInitializer.getWorld(target.world);
+				World targetWorld = DimensionalDoors.getWorld(target.world);
 				targetWorld.setBlockState(target.getBlockPos(), ModBlocks.DETACHED_RIFT.getDefaultState());
 				DetachedRiftBlockEntity rift1 = (DetachedRiftBlockEntity) target.getBlockEntity();
 				rift1.register();

@@ -2,7 +2,7 @@ package org.dimdev.dimdoors.api.util;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -85,7 +85,7 @@ public class Location {
 	}
 
 	public ServerWorld getWorld() {
-		return DimensionalDoorsInitializer.getServer().getWorld(this.world);
+		return DimensionalDoors.getServer().getWorld(this.world);
 	}
 
 	public static NbtCompound toNbt(Location location) {

@@ -1,8 +1,8 @@
 package org.dimdev.dimdoors.pockets.modifier;
 
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.api.util.BlockBoxUtil;
 import org.dimdev.dimdoors.block.entity.RiftBlockEntity;
 import org.dimdev.dimdoors.pockets.PocketGenerationContext;
@@ -37,7 +37,7 @@ public class AbsoluteRiftBlockEntityModifier implements LazyModifier {
 
 	@Override
 	public Modifier fromNbt(NbtCompound nbt) {
-		serializedRifts = nbt.getList("rifts", NbtType.COMPOUND).parallelStream().unordered().map(NbtCompound.class::cast)
+		serializedRifts = nbt.getList("rifts", NbtElement.COMPOUND_TYPE).parallelStream().unordered().map(NbtCompound.class::cast)
 				.filter(compound -> {
 					if (compound.contains("Pos")) {
 						return true;
@@ -86,7 +86,7 @@ public class AbsoluteRiftBlockEntityModifier implements LazyModifier {
 	@Override
 	public void apply(PocketGenerationContext parameters, RiftManager manager) {
 		if (!manager.isPocketLazy()) { // rifts is guaranteed to exist at this stage since this modifier is not supposed to be loaded from json
-			World world = DimensionalDoorsInitializer.getWorld(manager.getPocket().getWorld());
+			World world = DimensionalDoors.getWorld(manager.getPocket().getWorld());
 			rifts.values().forEach(world::addBlockEntity);
 		}
 	}

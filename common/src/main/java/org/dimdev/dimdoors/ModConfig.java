@@ -1,5 +1,16 @@
 package org.dimdev.dimdoors;
 
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.serializer.ConfigSerializer;
+import me.shedaniel.autoconfig.util.Utils;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Jankson;
+import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.EnvironmentInterface;
+import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,23 +20,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.serializer.ConfigSerializer;
-import me.shedaniel.autoconfig.util.Utils;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Jankson;
-import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry;
-import org.jetbrains.annotations.NotNull;
-
-import net.minecraft.util.Identifier;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.EnvironmentInterface;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
-
-import static me.shedaniel.autoconfig.annotation.ConfigEntry.*;
+import static me.shedaniel.autoconfig.annotation.ConfigEntry.Category;
 import static me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.*;
-import static me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON;
 
 @SuppressWarnings("FieldMayBeFinal")
 @Config(name = "dimdoors")
@@ -139,8 +135,8 @@ public final class ModConfig implements ConfigData {
 		@Tooltip public int publicPocketSize = 1;
 		@Tooltip public String defaultWeightEquation = "5";
 		@Tooltip public int fallbackWeight = 5;
-		@Tooltip @EnumHandler(option = BUTTON) public ExtendedResourcePackActivationType classicPocketsResourcePackActivationType = ExtendedResourcePackActivationType.DEFAULT_ENABLED;
-		@Tooltip @EnumHandler(option = BUTTON) public ExtendedResourcePackActivationType defaultPocketsResourcePackActivationType = ExtendedResourcePackActivationType.DEFAULT_ENABLED;
+//		@Tooltip @EnumHandler(option = BUTTON) public ExtendedResourcePackActivationType classicPocketsResourcePackActivationType = ExtendedResourcePackActivationType.DEFAULT_ENABLED;
+//		@Tooltip @EnumHandler(option = BUTTON) public ExtendedResourcePackActivationType defaultPocketsResourcePackActivationType = ExtendedResourcePackActivationType.DEFAULT_ENABLED;
 		@Tooltip public boolean asyncWorldEditPocketLoading = true;
 		@Tooltip public boolean canUseRiftSignatureInPrivatePockets = true;
 	}
@@ -179,29 +175,30 @@ public final class ModConfig implements ConfigData {
 		@Tooltip public double riftJitter = 1;
 	}
 
-	@EnvironmentInterface(value = EnvType.CLIENT, itf = SelectionListEntry.Translatable.class)
-	public enum ExtendedResourcePackActivationType implements SelectionListEntry.Translatable {
-		NORMAL(ResourcePackActivationType.NORMAL, "resourcePackActivationType.normal"),
-		DEFAULT_ENABLED(ResourcePackActivationType.DEFAULT_ENABLED, "resourcePackActivationType.defaultEnabled"),
-		ALWAYS_ENABLED(ResourcePackActivationType.ALWAYS_ENABLED, "resourcePackActivationType.alwaysEnabled");
-
-		private final ResourcePackActivationType resourcePackActivationType;
-		private final String translationKey;
-
-		ExtendedResourcePackActivationType(ResourcePackActivationType resourcePackActivationType, String translationKey) {
-			this.resourcePackActivationType = resourcePackActivationType;
-			this.translationKey = translationKey;
-		}
-
-		public ResourcePackActivationType asResourcePackActivationType() {
-			return resourcePackActivationType;
-		}
-
-		@Override
-		public @NotNull String getKey() {
-			return translationKey;
-		}
-	}
+//	TODO: Do we still need this?
+//	@EnvironmentInterface(value = EnvType.CLIENT, itf = SelectionListEntry.Translatable.class)
+//	public enum ExtendedResourcePackActivationType implements SelectionListEntry.Translatable {
+//		NORMAL(ResourcePackActivationType.NORMAL, "resourcePackActivationType.normal"),
+//		DEFAULT_ENABLED(ResourcePackActivationType.DEFAULT_ENABLED, "resourcePackActivationType.defaultEnabled"),
+//		ALWAYS_ENABLED(ResourcePackActivationType.ALWAYS_ENABLED, "resourcePackActivationType.alwaysEnabled");
+//
+//		private final ResourcePackActivationType resourcePackActivationType;
+//		private final String translationKey;
+//
+//		ExtendedResourcePackActivationType(ResourcePackActivationType resourcePackActivationType, String translationKey) {
+//			this.resourcePackActivationType = resourcePackActivationType;
+//			this.translationKey = translationKey;
+//		}
+//
+//		public ResourcePackActivationType asResourcePackActivationType() {
+//			return resourcePackActivationType;
+//		}
+//
+//		@Override
+//		public @NotNull String getKey() {
+//			return translationKey;
+//		}
+//	}
 
 	public static class SubRootJanksonConfigSerializer<T extends ConfigData> implements ConfigSerializer<T> {
 		private static final Jankson JANKSON = Jankson.builder().build();
@@ -214,7 +211,7 @@ public final class ModConfig implements ConfigData {
 		}
 
 		private Path getConfigPath() {
-			return DimensionalDoorsInitializer.getConfigRoot().resolve(definition.name() + "-config.json5");
+			return DimensionalDoors.getConfigRoot().resolve(definition.name() + "-config.json5");
 		}
 
 		@Override

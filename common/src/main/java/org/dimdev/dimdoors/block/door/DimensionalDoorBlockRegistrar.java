@@ -2,6 +2,8 @@ package org.dimdev.dimdoors.block.door;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import dev.architectury.registry.block.BlockProperties;
+import dev.architectury.registry.client.rendering.RenderTypeRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
@@ -16,7 +18,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.block.entity.ModBlockEntityTypes;
 import org.dimdev.dimdoors.item.DimensionalDoorItemRegistrar;
 import org.dimdev.dimdoors.listener.BlockRegistryEntryAddedListener;
@@ -48,7 +50,7 @@ public class DimensionalDoorBlockRegistrar {
 	}
 
 	public void handleEntry(Identifier identifier, Block original) {
-		if (DimensionalDoorsInitializer.getConfig().getDoorsConfig().isAllowed(identifier)) {
+		if (DimensionalDoors.getConfig().getDoorsConfig().isAllowed(identifier)) {
 			if (!(original instanceof DimensionalDoorBlock) && original instanceof DoorBlock) {
 				register(identifier, original, DimensionalDoorBlockRegistrar::createAutoGenDimensionalDoorBlock);
 			} else if (!(original instanceof DimensionalTrapdoorBlock) && original instanceof TrapdoorBlock) {
@@ -59,7 +61,7 @@ public class DimensionalDoorBlockRegistrar {
 
 	private void register(Identifier identifier, Block original, BiFunction<AbstractBlock.Settings, Block, ? extends Block> constructor) {
 		Identifier gennedId = new Identifier("dimdoors", PREFIX + identifier.getNamespace() + "_" + identifier.getPath());
-		Block dimBlock = Registry.register(registry, gennedId, constructor.apply(FabricBlockSettings.copy(original), original));
+		Block dimBlock = Registry.register(registry, gennedId, constructor.apply(BlockProperties.copy(original), original));
 		ModBlockEntityTypes.ENTRANCE_RIFT.addBlock(dimBlock);
 		mappedDoorBlocks.put(gennedId, identifier);
 		itemRegistrar.notifyBlockMapped(original, dimBlock);
@@ -70,7 +72,7 @@ public class DimensionalDoorBlockRegistrar {
 	}
 
 	private void putCutout(Block original) {
-		BlockRenderLayerMap.INSTANCE.putBlock(original, RenderLayer.getCutout());
+		RenderTypeRegistry.register(RenderLayer.getCutout(), original);
 	}
 
 	public Identifier get(Identifier identifier) {

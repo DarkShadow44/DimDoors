@@ -1,7 +1,6 @@
 package org.dimdev.dimdoors.rift.targets;
 
 import com.mojang.serialization.Codec;
-import com.terraformersmc.modmenu.util.mod.Mod;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.EulerAngle;
 import net.minecraft.util.math.Vec3d;

@@ -22,7 +22,7 @@ import org.dimdev.dimdoors.DimensionalDoorsComponents;
 import org.dimdev.dimdoors.world.pocket.PocketDirectory;
 import org.dimdev.dimdoors.world.pocket.PrivateRegistry;
 
-import static org.dimdev.dimdoors.DimensionalDoorsInitializer.getServer;
+import static org.dimdev.dimdoors.DimensionalDoors.getServer;
 
 public class DimensionalRegistry implements ComponentV3 {
 	public static final int RIFT_DATA_VERSION = 1; // Increment this number every time a new schema is added
@@ -77,7 +77,6 @@ public class DimensionalRegistry implements ComponentV3 {
 		nbt.put("pocket_registry", futurePocketRegistryNbt.join());
 		nbt.put("rift_registry", futureRiftRegistryNbt.join());
 		nbt.put("private_registry", futurePrivateRegistryNbt.join());
-
 		nbt.putInt("RiftDataVersion", RIFT_DATA_VERSION);
 	}
 

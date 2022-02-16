@@ -3,7 +3,7 @@ package org.dimdev.dimdoors.pockets;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.pockets.virtual.reference.PocketGeneratorReference;
 import org.dimdev.dimdoors.rift.registry.LinkProperties;
 import org.dimdev.dimdoors.rift.targets.VirtualTarget;
@@ -38,11 +38,11 @@ public final class PocketGenerator {
 
 
     public static Pocket generatePrivatePocketV2(VirtualLocation virtualLocation) {
-		return generateFromPocketGroupV2(DimensionalDoorsInitializer.getWorld(ModDimensions.PERSONAL), new Identifier("dimdoors", "private"), virtualLocation, null, null);
+		return generateFromPocketGroupV2(DimensionalDoors.getWorld(ModDimensions.PERSONAL), new Identifier("dimdoors", "private"), virtualLocation, null, null);
     }
 
     public static Pocket generatePublicPocketV2(VirtualLocation virtualLocation, VirtualTarget linkTo, LinkProperties linkProperties) {
-        return generateFromPocketGroupV2(DimensionalDoorsInitializer.getWorld(ModDimensions.PUBLIC), new Identifier("dimdoors", "public"), virtualLocation, linkTo, linkProperties);
+        return generateFromPocketGroupV2(DimensionalDoors.getWorld(ModDimensions.PUBLIC), new Identifier("dimdoors", "public"), virtualLocation, linkTo, linkProperties);
     }
 
     public static Pocket generateFromPocketGroupV2(ServerWorld world, Identifier group, VirtualLocation virtualLocation, VirtualTarget linkTo, LinkProperties linkProperties) {
@@ -55,11 +55,11 @@ public final class PocketGenerator {
 	}
 
 	public static Pocket generateDungeonPocketV2(VirtualLocation virtualLocation, VirtualTarget linkTo, LinkProperties linkProperties) {
-		return generateFromPocketGroupV2(DimensionalDoorsInitializer.getWorld(ModDimensions.DUNGEON), new Identifier("dimdoors", "dungeon"), virtualLocation, linkTo, linkProperties);
+		return generateFromPocketGroupV2(DimensionalDoors.getWorld(ModDimensions.DUNGEON), new Identifier("dimdoors", "dungeon"), virtualLocation, linkTo, linkProperties);
 	}
 
 	public static Pocket generateDungeonPocketV2(VirtualLocation virtualLocation, VirtualTarget linkTo, LinkProperties linkProperties, Identifier group) {
-		return generateFromPocketGroupV2(DimensionalDoorsInitializer.getWorld(ModDimensions.DUNGEON), group, virtualLocation, linkTo, linkProperties);
+		return generateFromPocketGroupV2(DimensionalDoors.getWorld(ModDimensions.DUNGEON), group, virtualLocation, linkTo, linkProperties);
 	}
 
 	/*

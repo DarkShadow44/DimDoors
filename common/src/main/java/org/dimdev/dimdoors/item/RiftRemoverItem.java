@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import net.minecraft.util.hit.BlockHitResult;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.block.entity.DetachedRiftBlockEntity;
 import org.dimdev.dimdoors.block.entity.RiftBlockEntity;
 import org.dimdev.dimdoors.client.ToolTipHelper;
@@ -21,7 +21,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import net.fabricmc.api.EnvType;
@@ -48,7 +47,7 @@ public class RiftRemoverItem extends Item {
 		if (world.isClient) {
 			if (!RaycastHelper.hitsDetachedRift(hit, world)) {
 				player.sendMessage(new TranslatableText("tools.rift_miss"), true);
-				RiftBlockEntity.showRiftCoreUntil = System.currentTimeMillis() + DimensionalDoorsInitializer.getConfig().getGraphicsConfig().highlightRiftCoreFor;
+				RiftBlockEntity.showRiftCoreUntil = System.currentTimeMillis() + DimensionalDoors.getConfig().getGraphicsConfig().highlightRiftCoreFor;
 			}
 			return new TypedActionResult<>(ActionResult.FAIL, stack);
 		}

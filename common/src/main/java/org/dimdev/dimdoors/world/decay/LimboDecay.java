@@ -19,7 +19,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.RegistryKey;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dimdev.dimdoors.DimensionalDoorsInitializer;
+import org.dimdev.dimdoors.DimensionalDoors;
 import org.dimdev.dimdoors.network.ExtendedServerPlayNetworkHandler;
 import org.dimdev.dimdoors.network.packet.s2c.RenderBreakBlockS2CPacket;
 import org.dimdev.dimdoors.sound.ModSoundEvents;
@@ -48,7 +48,7 @@ public final class LimboDecay {
 	public static void applySpreadDecay(ServerWorld world, BlockPos pos) {
 		//Check if we randomly apply decay spread or not. This can be used to moderate the frequency of
 		//full spread decay checks, which can also shift its performance impact on the game.
-		if (RANDOM.nextDouble() < DimensionalDoorsInitializer.getConfig().getLimboConfig().decaySpreadChance) {
+		if (RANDOM.nextDouble() < DimensionalDoors.getConfig().getLimboConfig().decaySpreadChance) {
 			BlockState origin = world.getBlockState(pos);
 
 			//Apply decay to the blocks above, below, and on all four sides.
