@@ -64,6 +64,8 @@ repositories {
 	}
 
 	maven { url "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/" }
+
+    maven { url 'https://jitpack.io' }
 }
 
 def includeCompile(group, artifact, version) {
@@ -154,6 +156,16 @@ dependencies {
 	testImplementation('org.junit.jupiter:junit-jupiter:5.8.2')
 //	testImplementation("junit:junit:4.13.2")
 //	testImplementation("net.devtech:PotatoUnit:1.0.2")
+
+    modImplementation ('com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v1.4.8-1.18'){
+        exclude module: "fabric-api"
+        transitive(false)
+    }
+
+    modImplementation ('com.github.qouteall.ImmersivePortalsMod:q_misc_util:v1.4.8-1.18'){
+        exclude module: "fabric-api"
+        transitive(false)
+    }
 }
 
 version = computeVersion(project.mod_version) + "-" + project.minecraft_version

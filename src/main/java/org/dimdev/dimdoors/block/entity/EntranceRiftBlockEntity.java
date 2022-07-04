@@ -1,24 +1,28 @@
 package org.dimdev.dimdoors.block.entity;
 
 import java.util.Optional;
+import java.util.UUID;
 
-import net.minecraft.server.world.ServerWorld;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dimdev.dimdoors.DimensionalDoorsInitializer;
-import org.dimdev.dimdoors.block.CoordinateTransformerBlock;
-import org.dimdev.dimdoors.block.RiftProvider;
 import org.dimdev.dimdoors.api.client.DefaultTransformation;
 import org.dimdev.dimdoors.api.client.Transformer;
+import org.dimdev.dimdoors.api.util.EntityUtils;
+import org.dimdev.dimdoors.api.util.TeleportUtil;
+import org.dimdev.dimdoors.api.util.math.TransformationMatrix3d;
+import org.dimdev.dimdoors.block.CoordinateTransformerBlock;
+import org.dimdev.dimdoors.block.RiftProvider;
 import org.dimdev.dimdoors.item.RiftKeyItem;
 import org.dimdev.dimdoors.pockets.DefaultDungeonDestinations;
 import org.dimdev.dimdoors.rift.registry.Rift;
 import org.dimdev.dimdoors.rift.targets.EscapeTarget;
-import org.dimdev.dimdoors.api.util.EntityUtils;
-import org.dimdev.dimdoors.api.util.TeleportUtil;
-import org.dimdev.dimdoors.api.util.math.TransformationMatrix3d;
+import org.dimdev.dimdoors.rift.targets.Targets;
 import org.dimdev.dimdoors.world.ModDimensions;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
@@ -26,33 +30,59 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.EulerAngle;
 import net.minecraft.util.math.Vec3d;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.world.World;
 
 public class EntranceRiftBlockEntity extends RiftBlockEntity {
 	private static final EscapeTarget ESCAPE_TARGET = new EscapeTarget(true);
 	private static final Logger LOGGER = LogManager.getLogger();
 	private boolean locked;
+	PortalHelper portalHelper;
 
 	public EntranceRiftBlockEntity(BlockPos pos, BlockState state) {
 		super(ModBlockEntityTypes.ENTRANCE_RIFT, pos, state);
+
+		if (FabricLoader.getInstance().isModLoaded("imm_ptl_core")) {
+			portalHelper = new PortalHelper();
+		}
 	}
 
 	@Override
 	public void readNbt(NbtCompound nbt) {
 		super.readNbt(nbt);
 		locked = nbt.getBoolean("locked");
+		if (portalHelper != null) {
+			boolean hasPortal = nbt.getBoolean("has_portal");
+			portalHelper.setHasPortal(hasPortal);
+			if (hasPortal && !world.isClient) {
+				String portalIdStr = nbt.getString("portal_id");
+				if (portalIdStr != null) {
+					UUID portalId = UUID.fromString(portalIdStr);
+					Entity portal = ((ServerWorld)world).getEntity(portalId);
+					portalHelper.loadPortal(portal);
+				}
+			}
+		}
 	}
 
 	@Override
 	public void writeNbt(NbtCompound nbt) {
 		nbt.putBoolean("locked", locked);
+		nbt.putBoolean("has_portal", hasPortal());
+		if (portalHelper != null) {
+			String portalId = portalHelper.getPortalId();
+			if (portalId != null) {
+				nbt.putString("portal_id", portalId);
+			}
+		}
 		super.writeNbt(nbt);
 	}
 
@@ -171,5 +201,38 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 			this.setDestination(DefaultDungeonDestinations.getGateway());
 			this.setProperties(DefaultDungeonDestinations.POCKET_LINK_PROPERTIES);
 		}
+	}
+
+	public void tryCreatePortal() {
+		if (portalHelper == null || portalHelper.getHasPortal())
+			return;
+
+		portalHelper.createPortal(this.getTarget().as(Targets.ENTITY), world, pos, getOrientation());
+		BlockState state = world.getBlockState(pos);
+		world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
+	}
+
+	public boolean hasPortal() {
+		return portalHelper != null && portalHelper.getHasPortal();
+	}
+
+	public void tryDestroyPortal() {
+		if (portalHelper != null) {
+			portalHelper.destroyPortal();
+			BlockState state = world.getBlockState(pos);
+			world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
+		}
+	}
+
+	@Override
+	public Packet<ClientPlayPacketListener> toUpdatePacket() {
+		return BlockEntityUpdateS2CPacket.create(this);
+	}
+
+	@Override
+	public NbtCompound toInitialChunkDataNbt() {
+		NbtCompound tag = createNbt();
+		writeNbt(tag);
+		return tag;
 	}
 }

@@ -31,6 +31,8 @@ public class EntranceRiftBlockEntityRenderer implements BlockEntityRenderer<Entr
 					matrixStack.pop();
 				}
 
-		DimensionalPortalRenderer.renderDimensionalPortal(matrixStack, vertexConsumerProvider, blockEntity.getTransformer(), tickDelta, light, overlay, blockEntity.isTall());
+		if (!blockEntity.hasPortal()) {
+			//DimensionalPortalRenderer.renderDimensionalPortal(matrixStack, vertexConsumerProvider, blockEntity.getTransformer(), tickDelta, light, overlay, blockEntity.isTall());
+		}
 	}
 }
