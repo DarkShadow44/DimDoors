@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.dimdev.dimdoors.DimensionalDoorsInitializer;
 import org.dimdev.dimdoors.api.client.DefaultTransformation;
 import org.dimdev.dimdoors.api.client.Transformer;
+import org.dimdev.dimdoors.api.rift.target.EntityTarget;
 import org.dimdev.dimdoors.api.util.EntityUtils;
 import org.dimdev.dimdoors.api.util.TeleportUtil;
 import org.dimdev.dimdoors.api.util.math.TransformationMatrix3d;
@@ -206,8 +207,9 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 		portalIds = portalHelper.createPortal(this);
 		BlockState state = world.getBlockState(pos);
 		// Cycle other door for convenience
-		if (this.getTarget() instanceof EntranceRiftBlockEntity) {
-			EntranceRiftBlockEntity targetEntity = (EntranceRiftBlockEntity)this.getTarget();
+		EntityTarget target = this.getTarget().as(EntityTarget.class);
+		if (target instanceof EntranceRiftBlockEntity) {
+			EntranceRiftBlockEntity targetEntity = (EntranceRiftBlockEntity)target;
 			if (targetEntity != null && !targetEntity.hasPortal()) {
 				World targetWorld = targetEntity.getWorld();
 				BlockPos targetPos = targetEntity.getPos();

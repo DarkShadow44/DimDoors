@@ -149,8 +149,9 @@ public class DimensionalDoorBlock extends WaterLoggableDoorBlock implements Rift
 			rift.tryCreatePortal();
 			if (rift.hasPortal()) {
 				// Cycle other door for convenience
-				if (rift.getTarget() instanceof EntranceRiftBlockEntity) {
-					EntranceRiftBlockEntity targetEntity = (EntranceRiftBlockEntity)rift.getTarget();
+				EntityTarget target = rift.getTarget().as(EntityTarget.class);
+				if (target instanceof EntranceRiftBlockEntity) {
+					EntranceRiftBlockEntity targetEntity = (EntranceRiftBlockEntity)target;
 					if (targetEntity != null) {
 						World targetWorld = targetEntity.getWorld();
 						BlockPos targetPos = targetEntity.getPos();
