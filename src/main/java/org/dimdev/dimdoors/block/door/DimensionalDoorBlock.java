@@ -149,13 +149,13 @@ public class DimensionalDoorBlock extends WaterLoggableDoorBlock implements Rift
 			rift.tryCreatePortal();
 			if (rift.hasPortal()) {
 				// Cycle other door for convenience
-				EntranceRiftBlockEntity targetEntity = rift.getTarget().as(EntranceRiftBlockEntity.class);
-				if (targetEntity != null) {
-					World targetWorld = targetEntity.getWorld();
-					BlockPos targetPos = targetEntity.getPos();
-					targetWorld.setBlockState(targetPos, targetWorld.getBlockState(targetPos).with(DoorBlock.OPEN, this.isOpen(state)));
-					targetPos = targetPos.up();
-					targetWorld.setBlockState(targetPos, targetWorld.getBlockState(targetPos).with(DoorBlock.OPEN, this.isOpen(state)));
+				if (rift.getTarget() instanceof EntranceRiftBlockEntity) {
+					EntranceRiftBlockEntity targetEntity = (EntranceRiftBlockEntity)rift.getTarget();
+					if (targetEntity != null) {
+						World targetWorld = targetEntity.getWorld();
+						BlockPos targetPos = targetEntity.getPos();
+						targetWorld.setBlockState(targetPos, targetWorld.getBlockState(targetPos).with(DoorBlock.OPEN, state.get(OPEN)));
+					}
 				}
 			}
 		}
@@ -246,7 +246,7 @@ public class DimensionalDoorBlock extends WaterLoggableDoorBlock implements Rift
 	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
 		if (!world.isClient) {
 			EntranceRiftBlockEntity rift = this.getRift(world, pos, state);
-			rift.tryDestroyPortal();
+			rift.tryDestroyBothPortals();
 			rift.clearDirection();
 		}
 		DoubleBlockHalf doubleBlockHalf = state.get(HALF);
@@ -323,21 +323,11 @@ public class DimensionalDoorBlock extends WaterLoggableDoorBlock implements Rift
 		}
 		if (!world.isClient) {
 			EntranceRiftBlockEntity rift = this.getRift(world, pos, state);
-			rift.tryDestroyPortal();
+			rift.tryDestroyBothPortals();
 			rift.clearDirection();
 		}
 		createDetachedRift(world, pos, state);
 		return ActionResult.SUCCESS;
-	}
-
-	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		if (isOpen(state)) {
-			return VoxelShapes.empty();
-		}
-		else {
-			return super.getCollisionShape(state, world, pos, context);
-		}
 	}
 
 	@Override

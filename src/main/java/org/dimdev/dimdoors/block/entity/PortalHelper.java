@@ -11,6 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.Entity.RemovalReason;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -21,21 +22,29 @@ import net.minecraft.world.World;
 import qouteall.imm_ptl.core.portal.Portal;
 
 public class PortalHelper {
-	public void destroyPortal(EntranceRiftBlockEntity srcEntity, ServerWorld world, String portalId) {
-		if (portalId == null) {
-			return;
-		}
+	private void destroyPortalById(ServerWorld world, String portalId) {
 		Entity entity = world.getEntity(UUID.fromString(portalId));
 		if (entity == null) {
 			return;
 		}
 		((Portal) entity).remove(RemovalReason.KILLED);
+	}
 
+	public void destroyOtherPortal(EntranceRiftBlockEntity srcEntity) {
 		EntityTarget target = srcEntity.getTarget().as(Targets.ENTITY);
 		if (target instanceof EntranceRiftBlockEntity) {
 			EntranceRiftBlockEntity dstEntity = (EntranceRiftBlockEntity) target;
 			dstEntity.tryDestroyPortal();
 		}
+	}
+
+	public void destroyPortal(EntranceRiftBlockEntity srcEntity, ServerWorld world, Pair<String, String> portalIds) {
+		if (portalIds == null) {
+			return;
+		}
+
+		destroyPortalById(world, portalIds.getLeft());
+		destroyPortalById(world, portalIds.getRight());
 	}
 
 	public void createOtherPortal(EntranceRiftBlockEntity srcEntity) {
@@ -46,7 +55,7 @@ public class PortalHelper {
 		dstEntity.tryCreatePortal();
 	}
 
-	public String createPortal(EntranceRiftBlockEntity srcEntity) {
+	public Pair<String, String> createPortal(EntranceRiftBlockEntity srcEntity) {
 		EntityTarget target = srcEntity.getTarget().as(Targets.ENTITY);
 		if (!(target instanceof EntranceRiftBlockEntity))
 			return null;
@@ -69,23 +78,30 @@ public class PortalHelper {
 			dstPosOrientation = dstPosOrientation.getOpposite();
 		}
 
-		float portalDistance = 0.3f;
+		float portalDistance = 0.32f;
 
 		Vec3d srcPos = Vec3d.ofCenter(srcPosBlock).add(0, 0.5, 0);
 		srcPos = srcPos.add(Vec3d.of(srcPosOrientation.getOpposite().getVector()).multiply(portalDistance));
 		Vec3d targetPos = Vec3d.ofCenter(dstPosBlock)
 				.add(Vec3d.of(dstPosOrientation.getOpposite().getVector()).multiply(portalDistance)).add(0, 0.5, 0);
 
-		Portal portal = Portal.entityType.create(srcWorld);
-		portal.setOriginPos(srcPos);
-		portal.setDestinationDimension(dstWorld.getRegistryKey());
-		portal.setDestination(targetPos);
+		Portal portal1 = Portal.entityType.create(srcWorld);
+		Portal portal2 = Portal.entityType.create(srcWorld);
+		portal1.setOriginPos(srcPos);
+		portal2.setOriginPos(srcPos);
+		portal1.setDestinationDimension(dstWorld.getRegistryKey());
+		portal2.setDestinationDimension(dstWorld.getRegistryKey());
+		portal1.setDestination(targetPos);
+		portal2.setDestination(targetPos);
 		Vec3d axis = Vec3d.of(srcOrientation.rotateClockwise(Axis.Y).getVector());
-		portal.setOrientationAndSize(axis, new Vec3d(0, 1, 0), 1, 2);
+		portal1.setOrientationAndSize(axis, new Vec3d(0, 1, 0), 1, 2);
+		portal2.setOrientationAndSize(axis.multiply(-1), new Vec3d(0, 1, 0), 1, 2);
 		float rotFloat = srcOrientation.asRotation() - dstOrientation.asRotation();
 		Quaternion rot = Quaternion.fromEulerXyzDegrees(new Vec3f(0, rotFloat, 0));
-		portal.setRotationTransformation(rot);
-		portal.world.spawnEntity(portal);
+		portal1.setRotationTransformation(rot);
+		portal2.setRotationTransformation(rot);
+		portal1.world.spawnEntity(portal1);
+		portal2.world.spawnEntity(portal2);
 
 		if (!dstEntity.hasPortal()) { // Only rotate target if we create the first portal (aka an entrance)
 			// Rotate target door the right way
@@ -98,7 +114,7 @@ public class PortalHelper {
 			dstWorld.setBlockState(dstPosBlock, state);
 		}
 
-		return portal.getUuidAsString();
+		return new Pair<>(portal1.getUuidAsString(), portal2.getUuidAsString());
 	}
 
 }

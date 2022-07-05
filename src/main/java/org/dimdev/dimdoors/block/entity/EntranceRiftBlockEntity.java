@@ -1,7 +1,6 @@
 package org.dimdev.dimdoors.block.entity;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,7 +16,6 @@ import org.dimdev.dimdoors.item.RiftKeyItem;
 import org.dimdev.dimdoors.pockets.DefaultDungeonDestinations;
 import org.dimdev.dimdoors.rift.registry.Rift;
 import org.dimdev.dimdoors.rift.targets.EscapeTarget;
-import org.dimdev.dimdoors.rift.targets.Targets;
 import org.dimdev.dimdoors.world.ModDimensions;
 
 import net.fabricmc.api.EnvType;
@@ -25,16 +23,15 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.EulerAngle;
@@ -46,7 +43,7 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private boolean locked;
 	private Direction originalOrientation;
-	private String portalId = null;
+	private Pair<String, String> portalIds = null;
 	private static PortalHelper portalHelper;
 
 	public EntranceRiftBlockEntity(BlockPos pos, BlockState state) {
@@ -61,9 +58,10 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 	public void readNbt(NbtCompound nbt) {
 		super.readNbt(nbt);
 		locked = nbt.getBoolean("locked");
-		portalId = nbt.getString("portal_id");
-		if (portalId == "") {
-			portalId = null;
+		String portalId1 = nbt.getString("portal_id1");
+		String portalId2 = nbt.getString("portal_id2");
+		if (portalId1 != "" && portalId2 != "") {
+			portalIds = new Pair<>(portalId1, portalId2);
 		}
 		String originalOrientationStr = nbt.getString("original_direction");
 		if (originalOrientationStr != null) {
@@ -74,8 +72,9 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 	@Override
 	public void writeNbt(NbtCompound nbt) {
 		nbt.putBoolean("locked", locked);
-		if (portalId != null) {
-			nbt.putString("portal_id", portalId);
+		if (portalIds != null) {
+			nbt.putString("portal_id1", portalIds.getLeft());
+			nbt.putString("portal_id2", portalIds.getRight());
 		}
 		if (originalOrientation != null) {
 			nbt.putString("original_direction", originalOrientation.getName());
@@ -201,18 +200,27 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 	}
 
 	public void tryCreatePortal() {
-		if (world.isClient || portalHelper == null || portalId != null)
+		if (world.isClient || portalHelper == null || portalIds != null)
 			return;
 
-		portalId = portalHelper.createPortal(this);
-		portalHelper.createOtherPortal(this);
+		portalIds = portalHelper.createPortal(this);
 		BlockState state = world.getBlockState(pos);
+		// Cycle other door for convenience
+		if (this.getTarget() instanceof EntranceRiftBlockEntity) {
+			EntranceRiftBlockEntity targetEntity = (EntranceRiftBlockEntity)this.getTarget();
+			if (targetEntity != null && !targetEntity.hasPortal()) {
+				World targetWorld = targetEntity.getWorld();
+				BlockPos targetPos = targetEntity.getPos();
+				targetWorld.setBlockState(targetPos, targetWorld.getBlockState(targetPos).with(DoorBlock.OPEN, state.get(DoorBlock.OPEN)));
+			}
+		}
+		portalHelper.createOtherPortal(this);
 		this.markDirty();
 		world.updateListeners(pos, state, state, 0);
 	}
 
 	public boolean hasPortal() {
-		return portalHelper != null && portalId != null;
+		return portalHelper != null && portalIds != null;
 	}
 
 	public Direction getOriginalOrientation() {
@@ -225,10 +233,17 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 		return originalOrientation;
 	}
 
+	public void tryDestroyBothPortals() {
+		if (!world.isClient && portalHelper != null) {
+			tryDestroyPortal();
+			portalHelper.destroyOtherPortal(this);
+		}
+	}
+
 	public void tryDestroyPortal() {
 		if (!world.isClient && portalHelper != null) {
-			portalHelper.destroyPortal(this, (ServerWorld)world, portalId);
-			portalId = null;
+			portalHelper.destroyPortal(this, (ServerWorld)world, portalIds);
+			portalIds = null;
 			BlockState state = world.getBlockState(pos);
 			this.markDirty();
 			world.updateListeners(pos, state, state, 0);
@@ -236,7 +251,7 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 	}
 
 	public boolean shouldRenderSimplePortal() {
-		return portalHelper == null || portalId == null;
+		return portalHelper == null || portalIds == null;
 	}
 
 	public void clearDirection() {
