@@ -1,12 +1,15 @@
 package org.dimdev.dimdoors.block.entity;
 
+import java.util.UUID;
+
 import org.dimdev.dimdoors.api.rift.target.EntityTarget;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.Entity.RemovalReason;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -17,66 +20,45 @@ import net.minecraft.world.World;
 import qouteall.imm_ptl.core.portal.Portal;
 
 public class PortalHelper {
-
-	Portal portal = null;
-	boolean hasPortal = false;
-
-	public boolean getHasPortal() {
-		return hasPortal;
-	}
-
-	public String getPortalId() {
-		if (hasPortal) {
-			return portal.getUuid().toString();
-		}
-		return null;
-	}
-	
-	public void loadPortal(Entity portal) {
-		this.portal = (Portal)portal;
-	}
-
-	public void setHasPortal(boolean hasPortal) {
-		this.hasPortal = hasPortal;
-	}
-
-	public void destroyPortal() {
-		if (!hasPortal || portal == null) {
+	public void destroyPortal(ServerWorld world, String portalId) {
+		if (portalId == null) {
 			return;
 		}
-		portal.remove(RemovalReason.KILLED);
-		portal = null;
-		hasPortal = false;
+		Entity entity = world.getEntity(UUID.fromString(portalId));
+		if (entity == null) {
+			return;
+		}
+		((Portal) entity).remove(RemovalReason.KILLED);
 	}
 
-	public String createPortal(EntityTarget target, World srcWorld, BlockPos srcPosBlock, Direction srcOrientation) {
-		EntranceRiftBlockEntity dstEntity = target.as(EntranceRiftBlockEntity.class);
-		if (dstEntity == null)
+	public String createPortal(EntranceRiftBlockEntity srcEntity, EntityTarget target) {
+		if (! (target instanceof EntranceRiftBlockEntity))
 			return null;
 		
+		EntranceRiftBlockEntity dstEntity = (EntranceRiftBlockEntity)target;
+
+		World srcWorld = srcEntity.getWorld();
+		BlockPos srcPosBlock = srcEntity.getPos();
+		Direction srcOrientation = srcEntity.getOriginalOrientation();
+
 		World dstWorld = dstEntity.getWorld();
 		BlockPos dstPosBlock = dstEntity.getPos();
-		
-		BlockState srcState = srcWorld.getBlockState(srcPosBlock);
-		BlockState state = dstWorld.getBlockState(dstPosBlock);
-		state = state.rotate(BlockRotation.CLOCKWISE_180);
-		if (state.contains(Properties.DOOR_HINGE)) {
-			state = state.with(Properties.DOOR_HINGE, srcState.get(Properties.DOOR_HINGE));
-		}
-		dstWorld.setBlockState(dstPosBlock, state);
-		
-		Direction dstOrientation = target.getDoorTargetOrientation();
 
-		if (dstOrientation == null) {
-			dstOrientation = Direction.NORTH;
+		Direction dstOrientation = dstEntity.getOriginalOrientation().getOpposite();
+
+		Direction srcPosOrientation = srcOrientation;
+		Direction dstPosOrientation = dstOrientation;
+		if (dstEntity.hasPortal()) {
+			srcPosOrientation = srcPosOrientation.getOpposite();
+			dstPosOrientation = dstPosOrientation.getOpposite();
 		}
 
 		Vec3d srcPos = Vec3d.ofCenter(srcPosBlock).add(0, 0.5, 0);
-		srcPos = srcPos.add(Vec3d.of(srcOrientation.getOpposite().getVector()).multiply(0.3));
+		srcPos = srcPos.add(Vec3d.of(srcPosOrientation.getOpposite().getVector()).multiply(0.3));
 		Vec3d targetPos = Vec3d.ofCenter(dstPosBlock)
-				.add(Vec3d.of(dstOrientation.getOpposite().getVector()).multiply(0.3)).add(0, 0.5, 0);
+				.add(Vec3d.of(dstPosOrientation.getOpposite().getVector()).multiply(0.3)).add(0, 0.5, 0);
 
-		portal = Portal.entityType.create(srcWorld);
+		Portal portal = Portal.entityType.create(srcWorld);
 		portal.setOriginPos(srcPos);
 		portal.setDestinationDimension(dstWorld.getRegistryKey());
 		portal.setDestination(targetPos);
@@ -86,7 +68,19 @@ public class PortalHelper {
 		Quaternion rot = Quaternion.fromEulerXyzDegrees(new Vec3f(0, rotFloat, 0));
 		portal.setRotationTransformation(rot);
 		portal.world.spawnEntity(portal);
-		hasPortal = true;
+
+		if (!dstEntity.hasPortal()) { // Only rotate target if we create the first portal (aka an entrance)
+			// Rotate target door the right way
+			BlockState srcState = srcWorld.getBlockState(srcPosBlock);
+			BlockState state = dstWorld.getBlockState(dstPosBlock);
+			state = state.with(DoorBlock.FACING, dstOrientation);
+			if (state.contains(Properties.DOOR_HINGE)) {
+				state = state.with(Properties.DOOR_HINGE, srcState.get(Properties.DOOR_HINGE));
+			}
+			dstWorld.setBlockState(dstPosBlock, state);
+		}
+
+		return portal.getUuidAsString();
 	}
 
 }

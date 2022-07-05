@@ -45,12 +45,14 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 	private static final EscapeTarget ESCAPE_TARGET = new EscapeTarget(true);
 	private static final Logger LOGGER = LogManager.getLogger();
 	private boolean locked;
-	PortalHelper portalHelper;
+	private Direction originalOrientation;
+	private String portalId = null;
+	private static PortalHelper portalHelper;
 
 	public EntranceRiftBlockEntity(BlockPos pos, BlockState state) {
 		super(ModBlockEntityTypes.ENTRANCE_RIFT, pos, state);
 
-		if (FabricLoader.getInstance().isModLoaded("imm_ptl_core")) {
+		if (portalHelper == null && FabricLoader.getInstance().isModLoaded("imm_ptl_core")) {
 			portalHelper = new PortalHelper();
 		}
 	}
@@ -59,29 +61,24 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 	public void readNbt(NbtCompound nbt) {
 		super.readNbt(nbt);
 		locked = nbt.getBoolean("locked");
-		if (portalHelper != null) {
-			boolean hasPortal = nbt.getBoolean("has_portal");
-			portalHelper.setHasPortal(hasPortal);
-			if (hasPortal && !world.isClient) {
-				String portalIdStr = nbt.getString("portal_id");
-				if (portalIdStr != null) {
-					UUID portalId = UUID.fromString(portalIdStr);
-					Entity portal = ((ServerWorld)world).getEntity(portalId);
-					portalHelper.loadPortal(portal);
-				}
-			}
+		portalId = nbt.getString("portal_id");
+		if (portalId == "") {
+			portalId = null;
+		}
+		String originalOrientationStr = nbt.getString("original_direction");
+		if (originalOrientationStr != null) {
+			originalOrientation = Direction.byName(originalOrientationStr);
 		}
 	}
 
 	@Override
 	public void writeNbt(NbtCompound nbt) {
 		nbt.putBoolean("locked", locked);
-		nbt.putBoolean("has_portal", hasPortal());
-		if (portalHelper != null) {
-			String portalId = portalHelper.getPortalId();
-			if (portalId != null) {
-				nbt.putString("portal_id", portalId);
-			}
+		if (portalId != null) {
+			nbt.putString("portal_id", portalId);
+		}
+		if (originalOrientation != null) {
+			nbt.putString("original_direction", originalOrientation.getName());
 		}
 		super.writeNbt(nbt);
 	}
@@ -204,21 +201,32 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 	}
 
 	public void tryCreatePortal() {
-		if (portalHelper == null || portalHelper.getHasPortal())
+		if (world.isClient || portalHelper == null || portalId != null)
 			return;
 
-		portalHelper.createPortal(this.getTarget().as(Targets.ENTITY), world, pos, getOrientation());
+		portalId = portalHelper.createPortal(this, this.getTarget().as(Targets.ENTITY));
 		BlockState state = world.getBlockState(pos);
 		world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
 	}
 
 	public boolean hasPortal() {
-		return portalHelper != null && portalHelper.getHasPortal();
+		return portalHelper != null && portalId != null;
+	}
+
+	public Direction getOriginalOrientation() {
+		if (originalOrientation == null) {
+			originalOrientation = this.getOrientation();
+			BlockState state = world.getBlockState(pos);
+			world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
+		}
+		return originalOrientation;
 	}
 
 	public void tryDestroyPortal() {
-		if (portalHelper != null) {
-			portalHelper.destroyPortal();
+		if (!world.isClient && portalHelper != null) {
+			portalHelper.destroyPortal((ServerWorld)world, portalId);
+			portalId = null;
+			originalOrientation = null;
 			BlockState state = world.getBlockState(pos);
 			world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
 		}
