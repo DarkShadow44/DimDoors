@@ -247,6 +247,7 @@ public class DimensionalDoorBlock extends WaterLoggableDoorBlock implements Rift
 		if (!world.isClient) {
 			EntranceRiftBlockEntity rift = this.getRift(world, pos, state);
 			rift.tryDestroyPortal();
+			rift.clearDirection();
 		}
 		DoubleBlockHalf doubleBlockHalf = state.get(HALF);
 		BlockPos blockPos = pos;
@@ -323,6 +324,7 @@ public class DimensionalDoorBlock extends WaterLoggableDoorBlock implements Rift
 		if (!world.isClient) {
 			EntranceRiftBlockEntity rift = this.getRift(world, pos, state);
 			rift.tryDestroyPortal();
+			rift.clearDirection();
 		}
 		createDetachedRift(world, pos, state);
 		return ActionResult.SUCCESS;

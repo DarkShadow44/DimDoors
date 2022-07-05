@@ -204,7 +204,7 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 		if (world.isClient || portalHelper == null || portalId != null)
 			return;
 
-		portalId = portalHelper.createPortal(this, this.getTarget().as(Targets.ENTITY));
+		portalId = portalHelper.createPortal(this);
 		BlockState state = world.getBlockState(pos);
 		world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
 	}
@@ -224,12 +224,15 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 
 	public void tryDestroyPortal() {
 		if (!world.isClient && portalHelper != null) {
-			portalHelper.destroyPortal((ServerWorld)world, portalId);
+			portalHelper.destroyPortal(this, (ServerWorld)world, portalId);
 			portalId = null;
-			originalOrientation = null;
 			BlockState state = world.getBlockState(pos);
 			world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
 		}
+	}
+
+	public void clearDirection() {
+		originalOrientation = null;
 	}
 
 	@Override

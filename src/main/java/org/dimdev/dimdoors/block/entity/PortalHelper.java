@@ -3,6 +3,7 @@ package org.dimdev.dimdoors.block.entity;
 import java.util.UUID;
 
 import org.dimdev.dimdoors.api.rift.target.EntityTarget;
+import org.dimdev.dimdoors.rift.targets.Targets;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
@@ -20,7 +21,7 @@ import net.minecraft.world.World;
 import qouteall.imm_ptl.core.portal.Portal;
 
 public class PortalHelper {
-	public void destroyPortal(ServerWorld world, String portalId) {
+	public void destroyPortal(EntranceRiftBlockEntity srcEntity, ServerWorld world, String portalId) {
 		if (portalId == null) {
 			return;
 		}
@@ -29,13 +30,20 @@ public class PortalHelper {
 			return;
 		}
 		((Portal) entity).remove(RemovalReason.KILLED);
+
+		EntityTarget target = srcEntity.getTarget().as(Targets.ENTITY);
+		if (target instanceof EntranceRiftBlockEntity) {
+			EntranceRiftBlockEntity dstEntity = (EntranceRiftBlockEntity) target;
+			dstEntity.tryDestroyPortal();
+		}
 	}
 
-	public String createPortal(EntranceRiftBlockEntity srcEntity, EntityTarget target) {
-		if (! (target instanceof EntranceRiftBlockEntity))
+	public String createPortal(EntranceRiftBlockEntity srcEntity) {
+		EntityTarget target = srcEntity.getTarget().as(Targets.ENTITY);
+		if (!(target instanceof EntranceRiftBlockEntity))
 			return null;
-		
-		EntranceRiftBlockEntity dstEntity = (EntranceRiftBlockEntity)target;
+
+		EntranceRiftBlockEntity dstEntity = (EntranceRiftBlockEntity) target;
 
 		World srcWorld = srcEntity.getWorld();
 		BlockPos srcPosBlock = srcEntity.getPos();
@@ -53,10 +61,12 @@ public class PortalHelper {
 			dstPosOrientation = dstPosOrientation.getOpposite();
 		}
 
+		float portalDistance = 0.3f;
+
 		Vec3d srcPos = Vec3d.ofCenter(srcPosBlock).add(0, 0.5, 0);
-		srcPos = srcPos.add(Vec3d.of(srcPosOrientation.getOpposite().getVector()).multiply(0.3));
+		srcPos = srcPos.add(Vec3d.of(srcPosOrientation.getOpposite().getVector()).multiply(portalDistance));
 		Vec3d targetPos = Vec3d.ofCenter(dstPosBlock)
-				.add(Vec3d.of(dstPosOrientation.getOpposite().getVector()).multiply(0.3)).add(0, 0.5, 0);
+				.add(Vec3d.of(dstPosOrientation.getOpposite().getVector()).multiply(portalDistance)).add(0, 0.5, 0);
 
 		Portal portal = Portal.entityType.create(srcWorld);
 		portal.setOriginPos(srcPos);
