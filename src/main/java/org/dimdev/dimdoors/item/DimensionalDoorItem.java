@@ -104,6 +104,7 @@ public class DimensionalDoorItem extends BlockItem {
 				EntranceRiftBlockEntity newRift = (EntranceRiftBlockEntity) context.getWorld().getBlockEntity(pos);
 				newRift.copyFrom(rift);
 				newRift.updateType();
+				newRift.tryCreatePortal();
 			}
 		} else if (rift != null) {
 			rift.setUnregisterDisabled(false);

@@ -241,6 +241,9 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 
 	public void clearDirection() {
 		originalOrientation = null;
+		BlockState state = world.getBlockState(pos);
+		this.markDirty();
+		world.updateListeners(pos, state, state, 0);
 	}
 
 	@Override
