@@ -4,6 +4,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+
 import org.dimdev.dimdoors.api.client.DimensionalPortalRenderer;
 import org.dimdev.dimdoors.block.entity.EntranceRiftBlockEntity;
 
@@ -31,8 +33,8 @@ public class EntranceRiftBlockEntityRenderer implements BlockEntityRenderer<Entr
 					matrixStack.pop();
 				}
 
-		if (!blockEntity.hasPortal()) {
-			//DimensionalPortalRenderer.renderDimensionalPortal(matrixStack, vertexConsumerProvider, blockEntity.getTransformer(), tickDelta, light, overlay, blockEntity.isTall());
+		if (blockEntity.shouldRenderSimplePortal()) {
+			DimensionalPortalRenderer.renderDimensionalPortal(matrixStack, vertexConsumerProvider, blockEntity.getTransformer(), tickDelta, light, overlay, blockEntity.isTall());
 		}
 	}
 }

@@ -205,8 +205,10 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 			return;
 
 		portalId = portalHelper.createPortal(this);
+		portalHelper.createOtherPortal(this);
 		BlockState state = world.getBlockState(pos);
-		world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
+		this.markDirty();
+		world.updateListeners(pos, state, state, 0);
 	}
 
 	public boolean hasPortal() {
@@ -217,7 +219,8 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 		if (originalOrientation == null) {
 			originalOrientation = this.getOrientation();
 			BlockState state = world.getBlockState(pos);
-			world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
+			this.markDirty();
+			world.updateListeners(pos, state, state, 0);
 		}
 		return originalOrientation;
 	}
@@ -227,8 +230,13 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 			portalHelper.destroyPortal(this, (ServerWorld)world, portalId);
 			portalId = null;
 			BlockState state = world.getBlockState(pos);
-			world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
+			this.markDirty();
+			world.updateListeners(pos, state, state, 0);
 		}
+	}
+
+	public boolean shouldRenderSimplePortal() {
+		return portalHelper == null || portalId == null;
 	}
 
 	public void clearDirection() {
@@ -236,14 +244,10 @@ public class EntranceRiftBlockEntity extends RiftBlockEntity {
 	}
 
 	@Override
-	public Packet<ClientPlayPacketListener> toUpdatePacket() {
-		return BlockEntityUpdateS2CPacket.create(this);
-	}
-
-	@Override
 	public NbtCompound toInitialChunkDataNbt() {
+		super.toInitialChunkDataNbt();
 		NbtCompound tag = createNbt();
 		writeNbt(tag);
-		return tag;
+		return createNbt();
 	}
 }

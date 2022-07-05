@@ -38,6 +38,14 @@ public class PortalHelper {
 		}
 	}
 
+	public void createOtherPortal(EntranceRiftBlockEntity srcEntity) {
+		EntityTarget target = srcEntity.getTarget().as(Targets.ENTITY);
+		if (!(target instanceof EntranceRiftBlockEntity))
+			return;
+		EntranceRiftBlockEntity dstEntity = (EntranceRiftBlockEntity) target;
+		dstEntity.tryCreatePortal();
+	}
+
 	public String createPortal(EntranceRiftBlockEntity srcEntity) {
 		EntityTarget target = srcEntity.getTarget().as(Targets.ENTITY);
 		if (!(target instanceof EntranceRiftBlockEntity))
